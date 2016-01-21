@@ -13,7 +13,8 @@ import (
 func main() {
 
 	// Configurando banco de dados
-	db, err := sql.Open("sqlite3", "./banco.db")
+	var err error
+	db, err = sql.Open("sqlite3", "./banco.db")
 	if err != nil {
 		log.Fatal("Erro ao abrir o banco: ", err)
 	}
