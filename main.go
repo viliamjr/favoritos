@@ -1,21 +1,21 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
-	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
 	// Configurando banco de dados
-	var err error
-	db, err = bolt.Open("banco.db", 0600, nil)
+	db, err := sql.Open("sqlite3", "./banco.db")
 	if err != nil {
-		panic(err)
+		log.Fatal("Erro ao abrir o banco: ", err)
 	}
 	defer db.Close()
 
@@ -73,7 +73,7 @@ func construirLink(c *gin.Context) *Link {
 		c.PostForm("inputUrl"),
 		c.PostForm("inputTitulo"),
 		privado,
-		time.Now().Unix(),
+		time.Now(),
 		c.PostForm("inputTags"),
 	}
 }

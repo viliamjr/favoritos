@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
-	"strings"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -12,22 +12,33 @@ type Link struct {
 	Url         string
 	Titulo      string
 	Privado     bool
-	DataCriacao int64
+	DataCriacao time.Time
 	Tags        string
 }
 
-var db *sql.DB;
+var db *sql.DB
 
 func NovoLink(link *Link) {
 
-	stmt, err := tx.Prepare("insert into foo(nome) values(?)")
+	tx, err := db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Erro ao criar transação: ", err)
+	}
+
+	stmt, err := tx.Prepare("insert into link values(?, ?, ?, ?, ?)")
+	if err != nil {
+		log.Fatal("Erro ao preparar a query de insert: ", err)
 	}
 	defer stmt.Close()
 
+	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags, link.DataCriacao, link.Privado)
 	if err != nil {
-		log.Fatal("Erro ao criar novo link: ", err)
+		log.Fatal("Erro ao executar um insert no banco: ", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Fatal("Erro ao commitar transação de insert: ", err)
 	}
 }
 
@@ -35,20 +46,7 @@ func ProcurarLinkPorTag(tag string) []*Link {
 
 	encontrados := make([]*Link, 0)
 
-	db.View(func(tx *bolt.Tx) error {
-
-		b := tx.Bucket([]byte("LinksAlgorix"))
-
-		c := b.Cursor()
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-			link := Link{}
-			link.popular(v)
-			if strings.Contains(link.Tags, tag) {
-				encontrados = append(encontrados, &link)
-			}
-		}
-		return nil
-	})
+	//TODO popula slice com itens encontrados
 
 	return encontrados
 }
@@ -57,18 +55,7 @@ func ObterTodos() []*Link {
 
 	encontrados := make([]*Link, 0)
 
-	db.View(func(tx *bolt.Tx) error {
-
-		b := tx.Bucket([]byte("LinksAlgorix"))
-
-		c := b.Cursor()
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-			link := Link{}
-			link.popular(v)
-			encontrados = append(encontrados, &link)
-		}
-		return nil
-	})
+	//TODO popula slice com todos os links encontrados
 
 	return encontrados
 }
