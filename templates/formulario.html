@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Novo Link</title>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!-- Bootstrap Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+</head>
+<body style="background-color: #eee;">
+
+	<div class="container">
+
+	<form method="POST" action="/adicionarLink">
+		<h1>{{ .msg }}</h1>
+		<h2>Adicionar novo Link</h2>
+		<label for="inputUrl" class="sr-only">URL</label>
+		<input type="text" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+
+		<label for="inputTitulo" class="sr-only">Título</label>
+		<input type="text" name="inputTitulo" class="form-control" placeholder="Título" required>
+
+		<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
+		<input type="text" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" name="inputPrivado" value="1">
+				<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
+			</label>
+		</div>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Adicionar</button>
+	</form>
+
+	</div> <!-- /container -->
+
+	<!-- JQuery: dependência do bootstrap -->
+	<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+	<!-- JS do bootstrap -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+</body>
+</html>
