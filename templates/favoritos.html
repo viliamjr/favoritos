@@ -15,10 +15,20 @@
 
 	<div class="container">
 		{{if .msg}}
-			<h3>{{.msg}}</h3>
+			<div class="alert alert-info" role="alert">{{.msg}}</div>
 		{{end}}
+		<a class="btn btn-primary btn-lg" href="/formulario">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
+		</a>
 		{{range .links}}
-			<p>{{.Url}} {{.Titulo}} {{.Tags}} {{.DataCriacao}} {{.Privado}}</p>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<a href="http://{{.Url}}"><strong>{{.Titulo}}</strong> <small>({{.Url}})</small></a>
+				</div>
+				<div class="panel-body">
+					{{.Tags}} {{.DataCriacao}} {{.Privado}}
+				</div>
+			</div>
 		{{end}}
 	</div> <!-- /container -->
 
