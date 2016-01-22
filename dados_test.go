@@ -18,12 +18,12 @@ func TestDados(t *testing.T) {
 	NovoLink(&Link{"www.google.com", "Buscador Google", false, time.Now(), "buscador,site,www,web"})
 	NovoLink(&Link{"www.cade.com.br", "Buscador Google", false, time.Now(), "buscador,site,www,web"})
 
-	// encontrados := ObterTodos() //ProcurarLinkPorTag("www")
-	// if len(encontrados) > 0 {
-	// 	for _, link := range encontrados {
-	// 		t.Logf("%v\n", link)
-	// 	}
-	// }
+	encontrados := ObterTodos()
+	if len(encontrados) > 0 {
+		for _, link := range encontrados {
+			t.Logf("%v\n", link)
+		}
+	}
 
 	db.Close()
 }

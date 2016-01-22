@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -29,16 +28,23 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 
+		c.HTML(http.StatusOK, "favoritos.html", gin.H{
+			"links": ObterTodos(),
+		})
+	})
+
+	r.GET("/formulario", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "formulario.html", nil)
 	})
 
-	r.POST("/adicionarLink", func(c *gin.Context) {
+	r.POST("/salvar", func(c *gin.Context) {
 
 		link := construirLink(c)
 		NovoLink(link)
 
-		c.HTML(http.StatusOK, "formulario.html", gin.H{
-			"msg": fmt.Sprintf("SUCESSO?! %v", *link),
+		c.HTML(http.StatusOK, "favoritos.html", gin.H{
+			"msg": "Link salvo!",
+			"links": ObterTodos(),
 		})
 	})
 

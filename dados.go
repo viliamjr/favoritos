@@ -42,20 +42,30 @@ func NovoLink(link *Link) {
 	}
 }
 
+func ObterTodos() []*Link {
+
+	encontrados := make([]*Link, 0)
+
+	rows, err := db.Query("select * from link")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		link := &Link{}
+		rows.Scan(&link.Url, &link.Titulo, &link.Tags, &link.DataCriacao, &link.Privado)
+		encontrados = append(encontrados, link)
+	}
+
+	return encontrados
+}
+
 func ProcurarLinkPorTag(tag string) []*Link {
 
 	encontrados := make([]*Link, 0)
 
 	//TODO popula slice com itens encontrados
-
-	return encontrados
-}
-
-func ObterTodos() []*Link {
-
-	encontrados := make([]*Link, 0)
-
-	//TODO popula slice com todos os links encontrados
 
 	return encontrados
 }
