@@ -39,7 +39,15 @@
 							{{end}}
 						</h4>
 					</td>
-					<td>{{.DataCriacao}}</td>
+					<td>
+						{{.DataCriacao}}
+						<a class="btn btn-warning btn-sm" href="/editar">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+						<a class="btn btn-danger btn-sm" href="/remover">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</a>
+					</td>
 				</tr>
 			{{end}}
 		</tbody>
