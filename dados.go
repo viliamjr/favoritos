@@ -2,18 +2,49 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type ListaTags []string
+
+func (l ListaTags) String() string {
+	var s string
+	for i := 0; i < len(l); i++ {
+		s = s + l[i]
+		if i < (len(l) - 1) {
+			s = s + ","
+		}
+	}
+	return s
+}
+
+func NovasTags(s string) *ListaTags {
+	tags := make(ListaTags, 0)
+	for _, i := range strings.Split(s, ",") {
+		tags = append(tags, i)
+	}
+	return &tags
+}
+
+type DataFormatada struct {
+	time.Time
+}
+
+func (d DataFormatada) String() string {
+	return fmt.Sprintf("%d/%d/%d", d.Day(), d.Month(), d.Year())
+}
+
 type Link struct {
 	Url         string
 	Titulo      string
 	Privado     bool
-	DataCriacao time.Time
-	Tags        string
+	DataCriacao DataFormatada
+	Tags        *ListaTags
 }
 
 var db *sql.DB
@@ -31,7 +62,7 @@ func NovoLink(link *Link) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags, link.DataCriacao, link.Privado)
+	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags.String(), link.DataCriacao.Time, link.Privado)
 	if err != nil {
 		log.Fatal("Erro ao executar um insert no banco: ", err)
 	}
@@ -54,7 +85,9 @@ func ObterTodos() []*Link {
 
 	for rows.Next() {
 		link := &Link{}
-		rows.Scan(&link.Url, &link.Titulo, &link.Tags, &link.DataCriacao, &link.Privado)
+		var tags string
+		rows.Scan(&link.Url, &link.Titulo, &tags, &link.DataCriacao.Time, &link.Privado)
+		link.Tags = NovasTags(tags)
 		encontrados = append(encontrados, link)
 	}
 

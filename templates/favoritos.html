@@ -17,19 +17,34 @@
 		{{if .msg}}
 			<div class="alert alert-info" role="alert">{{.msg}}</div>
 		{{end}}
-		<a class="btn btn-primary btn-lg" href="/formulario">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
-		</a>
-		{{range .links}}
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<a href="http://{{.Url}}"><strong>{{.Titulo}}</strong> <small>({{.Url}})</small></a>
-				</div>
-				<div class="panel-body">
-					{{.Tags}} {{.DataCriacao}} {{.Privado}}
-				</div>
-			</div>
-		{{end}}
+		<table class="table table-hover">
+		<caption>
+			<a class="btn btn-primary btn-lg" href="/formulario">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
+			</a>
+		</caption>
+		<tbody>
+			{{range .links}}
+				<tr>
+					<td>
+						<a href="http://{{.Url}}"><h3>{{.Titulo}}</h3>
+						<small>{{.Url}}</small></a>
+					</td>
+					<td>
+						<h4>
+							{{range .Tags}}
+								<span class="label label-default">{{ . }}</span>
+							{{end}}
+							{{if .Privado}}
+								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+							{{end}}
+						</h4>
+					</td>
+					<td>{{.DataCriacao}}</td>
+				</tr>
+			{{end}}
+		</tbody>
+		</table>
 	</div> <!-- /container -->
 
 	<!-- JQuery: dependência do bootstrap -->

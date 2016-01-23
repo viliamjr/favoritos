@@ -80,7 +80,7 @@ func construirLink(c *gin.Context) *Link {
 		c.PostForm("inputUrl"),
 		c.PostForm("inputTitulo"),
 		privado,
-		time.Now(),
-		c.PostForm("inputTags"),
+		DataFormatada{time.Now()},
+		NovasTags(c.PostForm("inputTags")),
 	}
 }
