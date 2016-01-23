@@ -77,7 +77,7 @@ func ObterTodos() []*Link {
 
 	encontrados := make([]*Link, 0)
 
-	rows, err := db.Query("select * from link")
+	rows, err := db.Query("select url,titulo,tags,data_criacao,privado from link order by data_criacao desc;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -86,7 +86,7 @@ func ObterTodos() []*Link {
 	for rows.Next() {
 		link := &Link{}
 		var tags string
-		rows.Scan(&link.Url, &link.Titulo, &tags, &link.DataCriacao.Time, &link.Privado)
+		rows.Scan(&link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
 		link.Tags = NovasTags(tags)
 		encontrados = append(encontrados, link)
 	}

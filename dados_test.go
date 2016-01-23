@@ -15,8 +15,8 @@ func TestDados(t *testing.T) {
 	}
 	defer db.Close()
 
-	NovoLink(&Link{"www.google.com", "Buscador Google", false, time.Now(), NovasTags("buscador,site,www,web")})
-	NovoLink(&Link{"www.cade.com.br", "Buscador Google", false, time.Now(), NovasTags("buscador,site,www,web")})
+	NovoLink(&Link{"www.google.com", "Buscador Google", false, DataFormatada{time.Now()}, NovasTags("buscador,site,www,web")})
+	NovoLink(&Link{"www.cade.com.br", "Buscador Google", false, DataFormatada{time.Now()}, NovasTags("buscador,site,www,web")})
 
 	encontrados := ObterTodos()
 	if len(encontrados) > 0 {
