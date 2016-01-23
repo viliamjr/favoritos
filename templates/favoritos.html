@@ -27,16 +27,15 @@
 			{{range .links}}
 				<tr>
 					<td>
-						<a href="http://{{.Url}}"><h3>{{.Titulo}}</h3>
-						<small>{{.Url}}</small></a>
+						<a href="{{.Url}}"><h3>{{.Titulo}}</h3></a>
 					</td>
 					<td>
 						<h4>
-							{{range .Tags}}
-								<span class="label label-default">{{ . }}</span>
-							{{end}}
 							{{if .Privado}}
 								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+							{{end}}
+							{{range .Tags}}
+								<span class="label label-default">{{ . }}</span>
 							{{end}}
 						</h4>
 					</td>
