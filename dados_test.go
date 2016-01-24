@@ -2,21 +2,45 @@ package main
 
 import (
 	"database/sql"
+	"flag"
+	"fmt"
 	"testing"
 	"time"
+	"os"
 )
 
-func TestDados(t *testing.T) {
+func TestMain(m *testing.M) {
+
+	flag.Parse()
+
+	arquivoBD := "./banco_de_teste.db";
+	os.Remove(arquivoBD)
 
 	var err error
-	db, err = sql.Open("sqlite3", "./banco_de_teste.db")
+	db, err = sql.Open("sqlite3", arquivoBD)
 	if err != nil {
-		t.Error(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
-	defer db.Close()
 
-	NovoLink(&Link{"www.google.com", "Buscador Google", false, DataFormatada{time.Now()}, NovasTags("buscador,site,www,web")})
-	NovoLink(&Link{"www.cade.com.br", "Buscador Google", false, DataFormatada{time.Now()}, NovasTags("buscador,site,www,web")})
+	CriarBanco()
+
+	resultado := m.Run()
+
+	db.Close()
+
+	os.Remove(arquivoBD)
+
+	os.Exit(resultado)
+}
+
+func TestNovoLink(t *testing.T) {
+
+	NovoLink(&Link{Url:"www.google.com", Titulo:"Buscador Google", Privado:false, DataCriacao:DataFormatada{time.Now()}, Tags:NovasTags("buscador,site,www,web")},)
+	NovoLink(&Link{Url:"www.cade.com.br", Titulo:"Buscador Cade", Privado:true, DataCriacao:DataFormatada{time.Now()}, Tags:NovasTags("brasil,buscador,site,www,web")},)
+}
+
+func TestObterTodos(t *testing.T) {
 
 	encontrados := ObterTodos()
 	if len(encontrados) > 0 {
@@ -24,6 +48,4 @@ func TestDados(t *testing.T) {
 			t.Logf("%v\n", link)
 		}
 	}
-
-	db.Close()
 }

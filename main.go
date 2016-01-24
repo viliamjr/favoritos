@@ -19,6 +19,8 @@ func main() {
 	}
 	defer db.Close()
 
+	CriarBanco()
+
 	// Iniciando configuração do servidor web
 	r := gin.Default()
 
@@ -77,10 +79,10 @@ func construirLink(c *gin.Context) *Link {
 	}
 
 	return &Link{
-		c.PostForm("inputUrl"),
-		c.PostForm("inputTitulo"),
-		privado,
-		DataFormatada{time.Now()},
-		NovasTags(c.PostForm("inputTags")),
+		Url: c.PostForm("inputUrl"),
+		Titulo: c.PostForm("inputTitulo"),
+		Privado: privado,
+		DataCriacao: DataFormatada{time.Now()},
+		Tags: NovasTags(c.PostForm("inputTags")),
 	}
 }
