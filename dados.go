@@ -88,6 +88,30 @@ func NovoLink(link *Link) {
 	}
 }
 
+func RemoverLink(id string) {
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Fatal("Erro ao criar transação: ", err)
+	}
+
+	stmt, err := tx.Prepare("delete from link where rowid = ?")
+	if err != nil {
+		log.Fatal("Erro ao preparar a query de delete: ", err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		log.Fatal("Erro ao executar delete no banco: ", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		log.Fatal("Erro ao commitar transação de insert: ", err)
+	}
+}
+
 func ObterTodos() []*Link {
 
 	encontrados := make([]*Link, 0)

@@ -41,10 +41,10 @@
 					</td>
 					<td>
 						{{.DataCriacao}}
-						<a class="btn btn-warning btn-sm" href="/editar">
+						<a class="btn btn-warning btn-sm" href="/editar/{{.Id}}">
 							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 						</a>
-						<a class="btn btn-danger btn-sm" href="/remover">
+						<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.Id}}">
 							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 						</a>
 					</td>
@@ -58,6 +58,13 @@
 	<script src="/estatico/jquery-1.12.0.min.js"></script>
 	<!-- JS do bootstrap -->
 	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+	<!-- Confirmando exclusão -->
+	<script type="text/javascript">
+	    $('.confirmaExclusao').on('click', function () {
+	        return confirm('Você deseja excluir este item?');
+	    });
+	</script>
 
 </body>
 </html>

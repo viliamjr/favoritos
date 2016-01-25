@@ -45,7 +45,17 @@ func main() {
 		NovoLink(link)
 
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"msg": "Link salvo!",
+			"msg":   "Link salvo!",
+			"links": ObterTodos(),
+		})
+	})
+
+	r.GET("/remover/:id", func(c *gin.Context) {
+
+		RemoverLink(c.Param("id"))
+
+		c.HTML(http.StatusOK, "favoritos.html", gin.H{
+			"msg":   "Link removido!",
 			"links": ObterTodos(),
 		})
 	})
@@ -79,10 +89,10 @@ func construirLink(c *gin.Context) *Link {
 	}
 
 	return &Link{
-		Url: c.PostForm("inputUrl"),
-		Titulo: c.PostForm("inputTitulo"),
-		Privado: privado,
+		Url:         c.PostForm("inputUrl"),
+		Titulo:      c.PostForm("inputTitulo"),
+		Privado:     privado,
 		DataCriacao: DataFormatada{time.Now()},
-		Tags: NovasTags(c.PostForm("inputTags")),
+		Tags:        NovasTags(c.PostForm("inputTags")),
 	}
 }
