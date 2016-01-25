@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +43,12 @@ func main() {
 	r.POST("/salvar", func(c *gin.Context) {
 
 		link := construirLink(c)
-		NovoLink(link)
+
+		if c.PostForm("inputId") != "" {
+			AtualizarLink(link)
+		} else {
+			NovoLink(link)
+		}
 
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"msg":   "Link salvo!",
@@ -57,6 +63,13 @@ func main() {
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"msg":   "Link removido!",
 			"links": ObterTodos(),
+		})
+	})
+
+	r.GET("/editar/:id", func(c *gin.Context) {
+
+		c.HTML(http.StatusOK, "formulario.html", gin.H{
+			"link": ObterLink(c.Param("id")),
 		})
 	})
 
@@ -88,11 +101,23 @@ func construirLink(c *gin.Context) *Link {
 		privado = true
 	}
 
+	id, err := strconv.Atoi(c.PostForm("inputId"))
+	if err != nil {
+		id = -1
+	}
+
+	dataCriacao := time.Now()
+	// XXX validar data na edição
+	// if inputDataCriacao := c.PostForm("inputDataCriacao"); inputDataCriacao != "" {
+	// 	dataCriacao, _ = time.Parse(inputDataCriacao, inputDataCriacao)
+	// }
+
 	return &Link{
+		Id:          id,
 		Url:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
 		Privado:     privado,
-		DataCriacao: DataFormatada{time.Now()},
+		DataCriacao: DataFormatada{dataCriacao},
 		Tags:        NovasTags(c.PostForm("inputTags")),
 	}
 }

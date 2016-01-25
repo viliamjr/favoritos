@@ -88,6 +88,16 @@ func NovoLink(link *Link) {
 	}
 }
 
+func AtualizarLink(link *Link) {
+
+	_, err := db.Exec(`update link set url=?, titulo=?, tags=?, data_criacao=?, privado=? where rowid = ?;`,
+		link.Url, link.Titulo, link.Tags.String(), (link.DataCriacao.Time), link.Privado, link.Id)
+
+	if err != nil {
+		log.Fatal("Erro no update de link: ", err)
+	}
+}
+
 func RemoverLink(id string) {
 
 	tx, err := db.Begin()
@@ -131,6 +141,25 @@ func ObterTodos() []*Link {
 	}
 
 	return encontrados
+}
+
+func ObterLink(id string) *Link {
+
+	link := &Link{}
+
+	rows, err := db.Query("select rowid,url,titulo,tags,data_criacao,privado from link where rowid = ?;", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	if rows.Next() {
+		var tags string
+		rows.Scan(&link.Id, &link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
+		link.Tags = NovasTags(tags)
+	}
+
+	return link
 }
 
 func ProcurarLinkPorTag(tag string) []*Link {

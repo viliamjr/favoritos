@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Novo Link</title>
+	<title>Favoritos</title>
 
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="/estatico/bootstrap-3.3.6-dist/css/bootstrap.min.css">
@@ -15,25 +15,30 @@
 
 	<div class="container">
 
+	<h2>Link</h2>
 	<form method="POST" action="/salvar">
-		<h1>{{ .msg }}</h1>
-		<h2>Adicionar novo Link</h2>
+		<input type="hidden" name="inputId" value="{{.link.Id}}">
+		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time}}">
 		<label for="inputUrl" class="sr-only">URL</label>
-		<input type="text" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+		<input type="text" value="{{.link.Url}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
 
 		<label for="inputTitulo" class="sr-only">Título</label>
-		<input type="text" name="inputTitulo" class="form-control" placeholder="Título" required>
+		<input type="text" value="{{.link.Titulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
 
 		<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
-		<input type="text" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+		<input type="text" value="{{.link.Tags}}" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
 
 		<div class="checkbox">
 			<label>
-				<input type="checkbox" name="inputPrivado" value="1">
+				{{if .link.Privado}}
+					<input type="checkbox" checked name="inputPrivado" value="1">
+				{{else}}
+					<input type="checkbox" name="inputPrivado" value="1">
+				{{end}}
 				<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
 			</label>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block" type="submit">Adicionar</button>
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Salvar</button>
 	</form>
 
 	</div> <!-- /container -->
