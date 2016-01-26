@@ -16,7 +16,7 @@
 	<div class="container">
 
 	<h2>Link</h2>
-	<form method="POST" action="/salvar">
+	<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
 		<input type="hidden" name="inputId" value="{{.link.Id}}">
 		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time}}">
 		<label for="inputUrl" class="sr-only">URL</label>
@@ -47,6 +47,15 @@
 	<script src="/estatico/jquery-1.12.0.min.js"></script>
 	<!-- JS do bootstrap -->
 	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		function validarFormulario() {
+			var input = $('[name=inputUrl]');
+			var url = input.val().trim().toLowerCase();
+			input.focus();
+			return (url.startsWith("http://") || url.startsWith("https://"));
+		}
+	</script>
 
 </body>
 </html>
