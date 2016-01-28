@@ -37,7 +37,10 @@ func main() {
 	})
 
 	r.GET("/formulario", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "formulario.html", nil)
+		c.HTML(http.StatusOK, "formulario.html", gin.H{
+			"novaUrl": c.Query("url"),
+			"novoTitulo": c.Query("titulo"),
+		})
 	})
 
 	r.POST("/salvar", func(c *gin.Context) {

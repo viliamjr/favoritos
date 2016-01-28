@@ -20,10 +20,10 @@
 		<input type="hidden" name="inputId" value="{{.link.Id}}">
 		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
 		<label for="inputUrl" class="sr-only">URL</label>
-		<input type="text" value="{{.link.Url}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+		<input type="text" value="{{.link.Url}}{{.novaUrl}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
 
 		<label for="inputTitulo" class="sr-only">Título</label>
-		<input type="text" value="{{.link.Titulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
+		<input type="text" value="{{.link.Titulo}}{{.novoTitulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
 
 		<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
 		<input type="text" value="{{.link.Tags}}" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
