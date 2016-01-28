@@ -18,7 +18,7 @@
 	<h2>Link</h2>
 	<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
 		<input type="hidden" name="inputId" value="{{.link.Id}}">
-		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time}}">
+		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
 		<label for="inputUrl" class="sr-only">URL</label>
 		<input type="text" value="{{.link.Url}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
 

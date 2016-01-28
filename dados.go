@@ -36,7 +36,7 @@ type DataFormatada struct {
 }
 
 func (d DataFormatada) String() string {
-	return fmt.Sprintf("%d/%d/%d", d.Day(), d.Month(), d.Year())
+	return fmt.Sprintf("%02d/%02d/%d", d.Day(), d.Month(), d.Year())
 }
 
 type Link struct {
@@ -77,7 +77,7 @@ func NovoLink(link *Link) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags.String(), link.DataCriacao.Time, link.Privado)
+	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags.String(), link.DataCriacao.Time.Unix(), link.Privado)
 	if err != nil {
 		log.Fatal("Erro ao executar um insert no banco: ", err)
 	}
@@ -90,8 +90,8 @@ func NovoLink(link *Link) {
 
 func AtualizarLink(link *Link) {
 
-	_, err := db.Exec(`update link set url=?, titulo=?, tags=?, data_criacao=?, privado=? where rowid = ?;`,
-		link.Url, link.Titulo, link.Tags.String(), (link.DataCriacao.Time), link.Privado, link.Id)
+	_, err := db.Exec(`update link set url=?, titulo=?, tags=?, privado=? where rowid = ?;`,
+		link.Url, link.Titulo, link.Tags.String(), link.Privado, link.Id)
 
 	if err != nil {
 		log.Fatal("Erro no update de link: ", err)

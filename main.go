@@ -106,18 +106,12 @@ func construirLink(c *gin.Context) *Link {
 		id = -1
 	}
 
-	dataCriacao := time.Now()
-	// XXX validar data na edição
-	// if inputDataCriacao := c.PostForm("inputDataCriacao"); inputDataCriacao != "" {
-	// 	dataCriacao, _ = time.Parse(inputDataCriacao, inputDataCriacao)
-	// }
-
 	return &Link{
 		Id:          id,
 		Url:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
 		Privado:     privado,
-		DataCriacao: DataFormatada{dataCriacao},
+		DataCriacao: DataFormatada{time.Now()},
 		Tags:        NovasTags(c.PostForm("inputTags")),
 	}
 }
