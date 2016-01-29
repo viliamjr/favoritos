@@ -14,44 +14,55 @@
 <body style="background-color: #eee;">
 
 	<div class="container">
-		{{if .msg}}
-			<div class="alert alert-info" role="alert">{{.msg}}</div>
-		{{end}}
-		<table class="table table-hover">
-		<caption>
-			<a class="btn btn-primary btn-lg" href="/formulario">
-				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
-			</a>
-		</caption>
-		<tbody>
-			{{range .links}}
-				<tr>
-					<td>
-						<a href="{{.Url}}"><h3>{{.Titulo}}</h3></a>
-					</td>
-					<td>
-						<h4>
-							{{if .Privado}}
-								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-							{{end}}
-							{{range .Tags}}
-								<span class="label label-default">{{ . }}</span>
-							{{end}}
-						</h4>
-					</td>
-					<td>
-						{{.DataCriacao}}
-						<a class="btn btn-warning btn-sm" href="/editar/{{.Id}}">
-							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-						</a>
-						<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.Id}}">
-							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-						</a>
-					</td>
-				</tr>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a class="btn btn-primary btn-lg" href="/formulario">
+					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
+				</a>
+			</div>
+		<div>
+		<div class="row">
+			{{if .msg}}
+				<div class="alert alert-info" role="alert">{{.msg}}</div>
 			{{end}}
-		</tbody>
-		</table>
+			<table class="table table-hover">
+			<tbody>
+				{{range .links}}
+					<tr>
+						<td>
+							<a href="{{.Url}}"><h3>{{.Titulo}}</h3></a>
+						</td>
+						<td>
+							<h4>
+								{{if .Privado}}
+									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+								{{end}}
+								{{range .Tags}}
+									<span class="label label-default">{{ . }}</span>
+								{{end}}
+							</h4>
+						</td>
+						<td>
+							{{.DataCriacao}}
+							<a class="btn btn-warning btn-sm" href="/editar/{{.Id}}">
+								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+							</a>
+							<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.Id}}">
+								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							</a>
+						</td>
+					</tr>
+				{{end}}
+			</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
+				<a class="btn btn-default btn-lg" href="/pagina/{{.proxPagina}}">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Mais...
+				</a>
+			</div>
+		</div>
 	</div> <!-- /container -->
 
 	<!-- JQuery: dependência do bootstrap -->

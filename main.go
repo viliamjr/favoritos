@@ -32,7 +32,17 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"links": ObterTodos(),
+			"proxPagina": 1,
+			"links": ObterPagina(0),
+		})
+	})
+
+	r.GET("/pagina/:pag", func(c *gin.Context) {
+
+		pag, _ := strconv.Atoi(c.Param("pag"))
+		c.HTML(http.StatusOK, "favoritos.html", gin.H{
+			"proxPagina": pag+1,
+			"links": ObterPagina(pag),
 		})
 	})
 

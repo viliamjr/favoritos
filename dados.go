@@ -143,6 +143,28 @@ func ObterTodos() []*Link {
 	return encontrados
 }
 
+func ObterPagina(pag int) []*Link {
+
+	encontrados := make([]*Link, 0)
+	offset := 20
+
+	rows, err := db.Query("select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;", (pag * offset), offset)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		link := &Link{}
+		var tags string
+		rows.Scan(&link.Id, &link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
+		link.Tags = NovasTags(tags)
+		encontrados = append(encontrados, link)
+	}
+
+	return encontrados
+}
+
 func ObterLink(id string) *Link {
 
 	link := &Link{}
