@@ -15,7 +15,16 @@
 
 	<div class="container">
 
-	<h2>Link</h2>
+	<div class="row">
+		<div class="col-xs-10">
+			<h2>Link</h2>
+		</div>
+		<div class="col-xs-2">
+			<button class="btn btn-default btn-sm glyphicon glyphicon-remove" aria-hidden="true" id="btnFechar"> FECHAR</button>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-xs-12">
 	<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
 		<input type="hidden" name="inputId" value="{{.link.Id}}">
 		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
@@ -40,6 +49,8 @@
 		</div>
 		<button class="btn btn-lg btn-primary btn-block" type="submit">Salvar</button>
 	</form>
+	</div>
+	</div>
 
 	</div> <!-- /container -->
 
@@ -49,6 +60,11 @@
 	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript">
+
+		$('#btnFechar').click(function(){
+			window.parent.postMessage("message","*");
+		});
+
 		function validarFormulario() {
 			var input = $('[name=inputUrl]');
 			var url = input.val().trim().toLowerCase();
