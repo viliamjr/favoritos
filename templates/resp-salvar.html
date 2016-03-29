@@ -15,8 +15,8 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-md-2 col-md-offset-5 alert alert-info" role="alert" style="text-align: center;">
-				Link salvo com sucesso!
+			<div class="col-md-2 col-md-offset-5 alert alert-{{if .error}}danger{{else}}success{{end}}" role="alert" style="text-align: center;">
+				{{.msg}}
 				<button class="btn btn-default btn-lg glyphicon glyphicon-remove" aria-hidden="true" id="btnFechar"></button>
 			</div>
 		</div>

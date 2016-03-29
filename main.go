@@ -33,7 +33,7 @@ func main() {
 
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"proxPagina": 1,
-			"links": ObterPagina(0),
+			"links":      ObterPagina(0),
 		})
 	})
 
@@ -41,14 +41,14 @@ func main() {
 
 		pag, _ := strconv.Atoi(c.Param("pag"))
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"proxPagina": pag+1,
-			"links": ObterPagina(pag),
+			"proxPagina": pag + 1,
+			"links":      ObterPagina(pag),
 		})
 	})
 
 	r.GET("/formulario", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "formulario.html", gin.H{
-			"novaUrl": c.Query("url"),
+			"novaUrl":    c.Query("url"),
 			"novoTitulo": c.Query("titulo"),
 		})
 	})
@@ -56,14 +56,24 @@ func main() {
 	r.POST("/salvar", func(c *gin.Context) {
 
 		link := construirLink(c)
+		var erro error
 
 		if c.PostForm("inputId") != "" {
 			AtualizarLink(link)
 		} else {
-			NovoLink(link)
+			erro = NovoLink(link)
 		}
 
-		c.HTML(http.StatusOK, "resp-salvar.html", nil)
+		msg := "Link salvo com sucesso!"
+		if erro != nil {
+			msg = "OPA! Esse link já foi cadastrado O.o"
+			log.Printf("Erro ao inserir novo link: %v\n", erro)
+		}
+
+		c.HTML(http.StatusOK, "resp-salvar.html", gin.H{
+			"error": erro,
+			"msg":   msg,
+		})
 	})
 
 	r.GET("/remover/:id", func(c *gin.Context) {
