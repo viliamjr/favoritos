@@ -63,10 +63,7 @@ func main() {
 			NovoLink(link)
 		}
 
-		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"msg":   "Link salvo!",
-			"links": ObterTodos(),
-		})
+		c.HTML(http.StatusOK, "resp-salvar.html", nil)
 	})
 
 	r.GET("/remover/:id", func(c *gin.Context) {

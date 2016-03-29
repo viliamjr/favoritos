@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Favoritos</title>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="/estatico/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+	<!-- Bootstrap Optional theme -->
+	<link rel="stylesheet" href="/estatico/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css">
+</head>
+<body style="background-color: #eee;">
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5 alert alert-info" role="alert" style="text-align: center;">
+				Link salvo com sucesso!
+				<button class="btn btn-default btn-lg glyphicon glyphicon-remove" aria-hidden="true" id="btnFechar"></button>
+			</div>
+		</div>
+	</div> <!-- /container -->
+
+	<!-- JQuery: dependência do bootstrap -->
+	<script src="/estatico/jquery-1.12.0.min.js"></script>
+	<!-- JS do bootstrap -->
+	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		$('#btnFechar').click(function(){
+			window.parent.postMessage("message","*");
+		});
+	</script>
+
+</body>
+</html>
