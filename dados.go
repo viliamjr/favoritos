@@ -133,35 +133,18 @@ func RemoverLink(id string) {
 	}
 }
 
-// ObterTodos retorna um slice com todos os Links do banco.
-func ObterTodos() []*Link {
-
-	var encontrados []*Link
-
-	rows, err := db.Query("select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc;")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		link := &Link{}
-		var tags string
-		rows.Scan(&link.Id, &link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
-		link.Tags = NovasTags(tags)
-		encontrados = append(encontrados, link)
-	}
-
-	return encontrados
-}
-
 // ObterPagina lista os links conforme algoritmo de paginação.
-func ObterPagina(pag int) []*Link {
+func ObterPagina(pag int, listarPrivados bool) []*Link {
 
 	var encontrados []*Link
 	offset := 20
 
-	rows, err := db.Query("select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;", (pag * offset), offset)
+	cmdSql := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 order by data_criacao desc limit ?,?;"
+	if listarPrivados {
+		cmdSql = "select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;"
+	}
+
+	rows, err := db.Query(cmdSql, (pag * offset), offset)
 	if err != nil {
 		log.Fatal(err)
 	}
