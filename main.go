@@ -29,31 +29,34 @@ func main() {
 
 	r.LoadHTMLGlob("templates/*")
 
-	r.GET("/", func(c *gin.Context) {
+	// Habilitando esquema de autorização simples
+	auth := r.Group("/", gin.BasicAuth(gin.Accounts{"admin": "foobar"}))
+
+	auth.GET("/", func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"proxPagina": 1,
-			"links":      ObterPagina(0),
+			"links":      ObterPagina(0, true),
 		})
 	})
 
-	r.GET("/pagina/:pag", func(c *gin.Context) {
+	auth.GET("/pagina/:pag", func(c *gin.Context) {
 
 		pag, _ := strconv.Atoi(c.Param("pag"))
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"proxPagina": pag + 1,
-			"links":      ObterPagina(pag),
+			"links":      ObterPagina(pag, true),
 		})
 	})
 
-	r.GET("/formulario", func(c *gin.Context) {
+	auth.GET("/formulario", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "formulario.html", gin.H{
 			"novaUrl":    c.Query("url"),
 			"novoTitulo": c.Query("titulo"),
 		})
 	})
 
-	r.POST("/salvar", func(c *gin.Context) {
+	auth.POST("/salvar", func(c *gin.Context) {
 
 		link := construirLink(c)
 		var erro error
@@ -76,17 +79,16 @@ func main() {
 		})
 	})
 
-	r.GET("/remover/:id", func(c *gin.Context) {
+	auth.GET("/remover/:id", func(c *gin.Context) {
 
 		RemoverLink(c.Param("id"))
-
 		c.HTML(http.StatusOK, "favoritos.html", gin.H{
 			"msg":   "Link removido!",
-			"links": ObterTodos(),
+			"links": ObterPagina(0, true),
 		})
 	})
 
-	r.GET("/editar/:id", func(c *gin.Context) {
+	auth.GET("/editar/:id", func(c *gin.Context) {
 
 		c.HTML(http.StatusOK, "formulario.html", gin.H{
 			"link": ObterLink(c.Param("id")),
