@@ -16,11 +16,11 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-2 col-md-offset-5">
-				<a class="btn btn-primary btn-lg" href="/formulario">
+				<a class="btn btn-success btn-lg" href="/formulario">
 					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
 				</a>
 			</div>
-		<div>
+		</div>
 		<div class="row">
 			{{if .msg}}
 				<div class="alert alert-info" role="alert">{{.msg}}</div>
@@ -30,20 +30,15 @@
 				{{range .links}}
 					<tr>
 						<td>
-							<a href="{{.Url}}"><h3>{{.Titulo}}</h3></a>
+							<h4><a href="{{.Url}}">{{.Titulo}}</a> <small>({{.DataCriacao}})</small></h4>
+							{{if .Privado}}
+								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+							{{end}}
+							{{range .Tags}}
+								<span class="label label-default">{{ . }}</span>
+							{{end}}
 						</td>
 						<td>
-							<h4>
-								{{if .Privado}}
-									<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-								{{end}}
-								{{range .Tags}}
-									<span class="label label-default">{{ . }}</span>
-								{{end}}
-							</h4>
-						</td>
-						<td>
-							{{.DataCriacao}}
 							<a class="btn btn-warning btn-sm" href="/editar/{{.Id}}">
 								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 							</a>
