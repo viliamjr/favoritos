@@ -95,24 +95,6 @@ func main() {
 		})
 	})
 
-	/*
-		r.GET("/olaAngular", func(c *gin.Context) {
-
-			c.HTML(http.StatusOK, "olaAngular.html", gin.H{
-				"msg": "Bem-vindo!!",
-			})
-		})
-
-		r.GET("/dados", func(c *gin.Context) {
-
-			c.JSON(http.StatusOK,
-				struct {
-					Mensagem string `json:"msg"`
-				}{"Oláaaaaaaaaa, javascript!"},
-			)
-		})
-	*/
-
 	r.Run(":8080")
 }
 
