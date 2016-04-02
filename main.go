@@ -16,6 +16,8 @@ func main() {
 	endereço := flag.String("e", ":8080", "endereço [IP:PORTA] a ser usado")
 	usuario := flag.String("u", "admin", "nome do usuário")
 	senha := flag.String("s", "foobar", "senha do usuário")
+	certSSL := flag.String("c", "cert.pem", "certificado ssl")
+	keySSL := flag.String("k", "key.pem", "chave do certificado ssl")
 	flag.Parse()
 
 	// Configurando banco de dados
@@ -101,7 +103,7 @@ func main() {
 		})
 	})
 
-	r.Run(*endereço)
+	log.Fatal(http.ListenAndServeTLS(*endereço, *certSSL, *keySSL, r))
 }
 
 func construirLink(c *gin.Context) *Link {
