@@ -36,8 +36,8 @@ func TestMain(m *testing.M) {
 
 func TestNovoLink(t *testing.T) {
 
-	NovoLink(&Link{Url: "www.google.com", Titulo: "Buscador Google", Privado: false, DataCriacao: DataFormatada{time.Now()}, Tags: NovasTags("buscador,site,www,web")})
-	NovoLink(&Link{Url: "www.cade.com.br", Titulo: "Buscador Cade", Privado: true, DataCriacao: DataFormatada{time.Now()}, Tags: NovasTags("brasil,buscador,site,www,web")})
+	NovoLink(&Link{URL: "www.google.com", Titulo: "Buscador Google", Privado: false, DataCriacao: DataFormatada{time.Now()}, Tags: NovasTags("buscador,site,www,web")})
+	NovoLink(&Link{URL: "www.cade.com.br", Titulo: "Buscador Cade", Privado: true, DataCriacao: DataFormatada{time.Now()}, Tags: NovasTags("brasil,buscador,site,www,web")})
 }
 
 func TestObterPagina(t *testing.T) {

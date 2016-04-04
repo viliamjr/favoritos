@@ -30,7 +30,7 @@
 				{{range .links}}
 					<tr>
 						<td>
-							<h4><a href="{{.Url}}">{{.Titulo}}</a> <small>({{.DataCriacao}})</small></h4>
+							<h4><a href="{{.URL}}">{{.Titulo}}</a> <small>({{.DataCriacao}})</small></h4>
 							{{if .Privado}}
 								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 							{{end}}
@@ -39,10 +39,10 @@
 							{{end}}
 						</td>
 						<td>
-							<a class="btn btn-warning btn-sm" href="/editar/{{.Id}}">
+							<a class="btn btn-warning btn-sm" href="/editar/{{.ID}}">
 								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 							</a>
-							<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.Id}}">
+							<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.ID}}">
 								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</a>
 						</td>

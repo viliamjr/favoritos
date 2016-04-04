@@ -45,8 +45,8 @@ func (d DataFormatada) String() string {
 
 // Link representa o link a ser salvo.
 type Link struct {
-	Id          int
-	Url         string
+	ID          int
+	URL         string
 	Titulo      string
 	Privado     bool
 	DataCriacao DataFormatada
@@ -84,7 +84,7 @@ func NovoLink(link *Link) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(link.Url, link.Titulo, link.Tags.String(), link.DataCriacao.Time.Unix(), link.Privado)
+	_, err = stmt.Exec(link.URL, link.Titulo, link.Tags.String(), link.DataCriacao.Time.Unix(), link.Privado)
 	if err != nil {
 		return fmt.Errorf("Erro ao executar um insert no banco: %v", err)
 	}
@@ -101,7 +101,7 @@ func NovoLink(link *Link) error {
 func AtualizarLink(link *Link) {
 
 	_, err := db.Exec(`update link set url=?, titulo=?, tags=?, privado=? where rowid = ?;`,
-		link.Url, link.Titulo, link.Tags.String(), link.Privado, link.Id)
+		link.URL, link.Titulo, link.Tags.String(), link.Privado, link.ID)
 
 	if err != nil {
 		log.Fatal("Erro no update de link: ", err)
@@ -139,12 +139,12 @@ func ObterPagina(pag int, listarPrivados bool) []*Link {
 	var encontrados []*Link
 	offset := 20
 
-	cmdSql := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 order by data_criacao desc limit ?,?;"
+	cmdSQL := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 order by data_criacao desc limit ?,?;"
 	if listarPrivados {
-		cmdSql = "select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;"
+		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;"
 	}
 
-	rows, err := db.Query(cmdSql, (pag * offset), offset)
+	rows, err := db.Query(cmdSQL, (pag * offset), offset)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -153,7 +153,7 @@ func ObterPagina(pag int, listarPrivados bool) []*Link {
 	for rows.Next() {
 		link := &Link{}
 		var tags string
-		rows.Scan(&link.Id, &link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
+		rows.Scan(&link.ID, &link.URL, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
 		link.Tags = NovasTags(tags)
 		encontrados = append(encontrados, link)
 	}
@@ -174,7 +174,7 @@ func ObterLink(id string) *Link {
 
 	if rows.Next() {
 		var tags string
-		rows.Scan(&link.Id, &link.Url, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
+		rows.Scan(&link.ID, &link.URL, &link.Titulo, &tags, &(link.DataCriacao.Time), &link.Privado)
 		link.Tags = NovasTags(tags)
 	}
 
