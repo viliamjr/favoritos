@@ -1,4 +1,4 @@
-package main
+package modelo
 
 import (
 	"database/sql"
@@ -6,8 +6,6 @@ import (
 	"log"
 	"strings"
 	"time"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 // ListaTags representa os tags de marcação dos link
@@ -55,9 +53,23 @@ type Link struct {
 
 var db *sql.DB
 
-// CriarBanco criar um BD zerado. Usado somente quando o banco não existe.
-func CriarBanco() {
+// CarregarBanco carrega a variável de pacote 'db' com o banco de dados.
+func CarregarBanco() *sql.DB {
 
+	// configurando banco de dados
+	var err error
+	db, err = sql.Open("sqlite3", "./banco.db")
+	if err != nil {
+		log.Fatal("Erro ao abrir o banco: ", err)
+	}
+
+	CriarBanco()
+
+	return db
+}
+
+// CriarBanco cria o esquema do BD, caso o banco ainda não exista.
+func CriarBanco() {
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS link (
 		url text not null unique,
 		titulo text not null,

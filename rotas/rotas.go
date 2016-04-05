@@ -1,6 +1,7 @@
-package main
+package rotas
 
 import (
+	"favoritos/modelo"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,10 +11,10 @@ import (
 )
 
 // RegistrarRotas realiza o registro de todas as rotas da aplicação.
-func RegistrarRotas(r *gin.Engine) {
+func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 
 	// Habilitando esquema de autorização simples
-	auth := r.Group("/", gin.BasicAuth(gin.Accounts{*usuario: *senha}))
+	auth := r.Group("/", gin.BasicAuth(gin.Accounts{usuario: senha}))
 
 	auth.GET("/", Raiz)
 
@@ -33,7 +34,7 @@ func Raiz(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "favoritos.html", gin.H{
 		"proxPagina": 1,
-		"links":      ObterPagina(0, true),
+		"links":      modelo.ObterPagina(0, true),
 	})
 }
 
@@ -43,7 +44,7 @@ func Pagina(c *gin.Context) {
 	pag, _ := strconv.Atoi(c.Param("pag"))
 	c.HTML(http.StatusOK, "favoritos.html", gin.H{
 		"proxPagina": pag + 1,
-		"links":      ObterPagina(pag, true),
+		"links":      modelo.ObterPagina(pag, true),
 	})
 }
 
@@ -62,9 +63,9 @@ func Salvar(c *gin.Context) {
 	var erro error
 
 	if c.PostForm("inputId") != "" {
-		AtualizarLink(link)
+		modelo.AtualizarLink(link)
 	} else {
-		erro = NovoLink(link)
+		erro = modelo.NovoLink(link)
 	}
 
 	msg := "Link salvo com sucesso!"
@@ -82,10 +83,10 @@ func Salvar(c *gin.Context) {
 // Remover define a rota para a remoção de um link
 func Remover(c *gin.Context) {
 
-	RemoverLink(c.Param("id"))
+	modelo.RemoverLink(c.Param("id"))
 	c.HTML(http.StatusOK, "favoritos.html", gin.H{
 		"msg":   "Link removido!",
-		"links": ObterPagina(0, true),
+		"links": modelo.ObterPagina(0, true),
 	})
 }
 
@@ -93,11 +94,11 @@ func Remover(c *gin.Context) {
 func Editar(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "formulario.html", gin.H{
-		"link": ObterLink(c.Param("id")),
+		"link": modelo.ObterLink(c.Param("id")),
 	})
 }
 
-func construirLink(c *gin.Context) *Link {
+func construirLink(c *gin.Context) *modelo.Link {
 
 	var privado bool
 	if c.PostForm("inputPrivado") != "" {
@@ -109,12 +110,12 @@ func construirLink(c *gin.Context) *Link {
 		id = -1
 	}
 
-	return &Link{
+	return &modelo.Link{
 		ID:          id,
 		URL:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
 		Privado:     privado,
-		DataCriacao: DataFormatada{time.Now()},
-		Tags:        NovasTags(c.PostForm("inputTags")),
+		DataCriacao: modelo.DataFormatada{time.Now()},
+		Tags:        modelo.NovasTags(c.PostForm("inputTags")),
 	}
 }

@@ -1,12 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"flag"
 	"log"
 	"net/http"
 
+	"favoritos/modelo"
+	"favoritos/rotas"
 	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -22,21 +24,14 @@ func main() {
 
 	flag.Parse()
 
-	// configurando banco de dados
-	var err error
-	db, err = sql.Open("sqlite3", "./banco.db")
-	if err != nil {
-		log.Fatal("Erro ao abrir o banco: ", err)
-	}
+	db := modelo.CarregarBanco()
 	defer db.Close()
-
-	CriarBanco()
 
 	// iniciando configuração do servidor web
 	r := gin.Default()
 	r.Static("/estatico", "estatico/")
 	r.LoadHTMLGlob("templates/*")
-	RegistrarRotas(r)
+	rotas.RegistrarRotas(r, *usuario, *senha)
 
 	if *naoHTTPS {
 		log.Fatal(http.ListenAndServe(*endereço, r))
