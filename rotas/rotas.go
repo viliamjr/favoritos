@@ -60,24 +60,28 @@ func Formulario(c *gin.Context) {
 func Salvar(c *gin.Context) {
 
 	link := construirLink(c)
-	var erro error
 
 	if c.PostForm("inputId") != "" {
+
 		modelo.AtualizarLink(link)
+		c.HTML(http.StatusOK, "favoritos.html", gin.H{
+			"proxPagina": 1,
+			"links":      modelo.ObterPagina(0, true),
+			"msg":        "Link atualizado!!",
+		})
 	} else {
-		erro = modelo.NovoLink(link)
-	}
 
-	msg := "Link salvo com sucesso!"
-	if erro != nil {
-		msg = "OPA! Esse link já foi cadastrado O.o"
-		log.Printf("Erro ao inserir novo link: %v\n", erro)
+		erro := modelo.NovoLink(link)
+		msg := "Link salvo com sucesso!"
+		if erro != nil {
+			msg = "OPA! Esse link já foi cadastrado O.o"
+			log.Printf("Erro ao inserir novo link: %v\n", erro)
+		}
+		c.HTML(http.StatusOK, "resp-salvar.html", gin.H{
+			"error": erro,
+			"msg":   msg,
+		})
 	}
-
-	c.HTML(http.StatusOK, "resp-salvar.html", gin.H{
-		"error": erro,
-		"msg":   msg,
-	})
 }
 
 // Remover define a rota para a remoção de um link
