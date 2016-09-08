@@ -92,17 +92,20 @@ func NovoLink(link *Link) error {
 
 	stmt, err := tx.Prepare("insert into link values(?, ?, ?, ?, ?)")
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("Erro ao preparar a query de insert: %v", err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(link.URL, link.Titulo, link.Tags.String(), link.DataCriacao.Time.Unix(), link.Privado)
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("Erro ao executar um insert no banco: %v", err)
 	}
 
 	err = tx.Commit()
 	if err != nil {
+		tx.Rollback()
 		return fmt.Errorf("Erro ao commitar transação de insert: %v", err)
 	}
 
