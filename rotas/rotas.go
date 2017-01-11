@@ -27,6 +27,8 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	auth.GET("/remover/:id", Remover)
 
 	auth.GET("/editar/:id", Editar)
+
+	auth.GET("/tag/:tag", Pagina)
 }
 
 // Raiz define a rota da página inicial
@@ -41,10 +43,13 @@ func Raiz(c *gin.Context) {
 // Pagina define a rota para a paginação dos links
 func Pagina(c *gin.Context) {
 
+	tag := c.Param("tag")
+	log.Println("TAAaaaaaaaag: " + tag)
+
 	pag, _ := strconv.Atoi(c.Param("pag"))
 	c.HTML(http.StatusOK, "favoritos.html", gin.H{
 		"proxPagina": pag + 1,
-		"links":      modelo.ObterPagina(pag, true),
+		"links":      modelo.ObterPaginaPorTag(pag, true, tag),
 	})
 }
 

@@ -35,7 +35,9 @@
 								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 							{{end}}
 							{{range .Tags}}
-								<span class="label label-default">{{ . }}</span>
+								<a style="text-decoration:none;" href="/tag/{{ . }}">
+									<span class="label label-default">{{ . }}</span>
+								</a>
 							{{end}}
 						</td>
 						<td>

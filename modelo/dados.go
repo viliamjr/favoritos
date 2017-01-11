@@ -150,14 +150,21 @@ func RemoverLink(id string) {
 
 // ObterPagina lista os links conforme algoritmo de paginação.
 func ObterPagina(pag int, listarPrivados bool) []*Link {
+	return ObterPaginaPorTag(pag, listarPrivados, "")
+}
+
+// ObterPaginaPorTag lista os links filtrando por tags e conforme algoritmo de paginação.
+func ObterPaginaPorTag(pag int, listarPrivados bool, tag string) []*Link {
 
 	var encontrados []*Link
 	offset := 20
 
-	cmdSQL := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 order by data_criacao desc limit ?,?;"
+	cmdSQL := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 and tags like '%" + tag + "%'"
 	if listarPrivados {
-		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link order by data_criacao desc limit ?,?;"
+		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link where tags like '%" + tag + "%'"
 	}
+
+	cmdSQL += " order by data_criacao desc limit ?,?;"
 
 	rows, err := db.Query(cmdSQL, (pag * offset), offset)
 	if err != nil {
