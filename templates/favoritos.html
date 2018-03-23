@@ -13,66 +13,45 @@
 </head>
 <body style="background-color: #eee;">
 
-	<div class="container">
+	<div id="listaLinks" class="container">
 		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a class="btn btn-success btn-lg" href="/formulario">
-					<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Novo
-				</a>
-			</div>
-		</div>
-		<div class="row">
-			{{if .msg}}
-				<div class="alert alert-info" role="alert">{{.msg}}</div>
-			{{end}}
+			<div v-if="erro" class="alert alert-info" role="alert">{(erro)}</div>
 			<table class="table table-hover">
 			<tbody>
-				{{range .links}}
-					<tr>
-						<td>
-							<h4><a href="{{.URL}}">{{.Titulo}}</a> <small>({{.DataCriacao}})</small></h4>
-							{{if .Privado}}
-								<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-							{{end}}
-							{{range .Tags}}
-								<a style="text-decoration:none;" href="/tag/{{ . }}">
-									<span class="label label-default">{{ . }}</span>
-								</a>
-							{{end}}
-						</td>
-						<td>
-							<a class="btn btn-warning btn-sm" href="/editar/{{.ID}}">
-								<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-							</a>
-							<a class="btn btn-danger btn-sm confirmaExclusao" href="/remover/{{.ID}}">
-								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-							</a>
-						</td>
-					</tr>
-				{{end}}
+			<tr v-for="link in lista">
+				<td>
+					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({(link.DataCriacao)})</small></h4>
+					<span v-if="link.Privado" class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+					<a v-for="tag in link.Tags" style="text-decoration:none;" :href="'/tag/' + tag">
+						<span class="label label-default">{(tag)}</span>
+					</a>
+				</td>
+				<td>
+					<a class="btn btn-warning btn-sm" :href="'/editar/' + link.id">
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+					</a>
+					<a class="btn btn-danger btn-sm confirmaExclusao" :href="'/remover/' + link.id">
+						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</a>
+				</td>
+			</tr>
 			</tbody>
 			</table>
 		</div>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-5">
-				<a class="btn btn-default btn-lg" href="/pagina/{{.proxPagina}}">
+				<a class="btn btn-default btn-lg" href="/mais-10">
 					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Mais...
 				</a>
 			</div>
 		</div>
-	</div> <!-- /container -->
+	</div>
 
-	<!-- JQuery: dependência do bootstrap -->
 	<script src="/estatico/jquery-1.12.0.min.js"></script>
-	<!-- JS do bootstrap -->
 	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
-
-	<!-- Confirmando exclusão -->
-	<script type="text/javascript">
-	    $('.confirmaExclusao').on('click', function () {
-	        return confirm('Você deseja excluir este item?');
-	    });
-	</script>
+	<script src="/estatico/vue-debug.js"></script>
+	<script src="/estatico/axios.min.js"></script>
+	<script src="/estatico/index.js"></script>
 
 </body>
 </html>

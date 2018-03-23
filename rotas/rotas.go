@@ -14,21 +14,30 @@ import (
 func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 
 	// Habilitando esquema de autorização simples
-	auth := r.Group("/", gin.BasicAuth(gin.Accounts{usuario: senha}))
+	auth := gin.BasicAuth(gin.Accounts{usuario: senha})
 
-	auth.GET("/", Raiz)
+	raiz := r.Group("/", auth)
+	{
+		raiz.GET("/", Raiz)
+		raiz.GET("/pagina/:pag", Pagina)
+		raiz.GET("/formulario", Formulario)
+		raiz.POST("/salvar", Salvar)
+		raiz.GET("/remover/:id", Remover)
+		raiz.GET("/editar/:id", Editar)
+		raiz.GET("/tag/:tag", Pagina)
+	}
 
-	auth.GET("/pagina/:pag", Pagina)
+	api := r.Group("/api", auth)
+	{
+		api.GET("/links", Links)
+	}
+}
 
-	auth.GET("/formulario", Formulario)
-
-	auth.POST("/salvar", Salvar)
-
-	auth.GET("/remover/:id", Remover)
-
-	auth.GET("/editar/:id", Editar)
-
-	auth.GET("/tag/:tag", Pagina)
+// Links define a rota da página inicial
+func Links(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"links": modelo.ObterPagina(0, true),
+	})
 }
 
 // Raiz define a rota da página inicial
