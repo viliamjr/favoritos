@@ -16,31 +16,25 @@
 	<div id="listaLinks" class="container">
 		<div class="row">
 			<h3>Novo Link</h3>
-			<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
-				<input type="hidden" name="inputId" value="{{.link.ID}}">
-				<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
-				<label for="inputUrl" class="sr-only">URL</label>
-				<input type="text" value="{{.link.URL}}{{.novaUrl}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
-		
-				<label for="inputTitulo" class="sr-only">Título</label>
-				<input type="text" value="{{.link.Titulo}}{{.novoTitulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
-		
-				<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
-				<input type="text" value="{{.link.Tags}}" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
-		
-				<div class="checkbox">
-					<label>
-						{{if .link.Privado}}
-							<input type="checkbox" checked name="inputPrivado" value="1">
-						{{else}}
-							<input type="checkbox" name="inputPrivado" value="1">
-						{{end}}
-						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
-					</label>
-				</div>
-				
-				<button class="btn btn-sm btn-primary btn-block" type="submit">Salvar</button>
-			</form>
+			<input type="hidden" name="inputId" v-model="link.inputId">
+			<input type="hidden" name="inputDataCriacao" v-model="link.DataCriacao">
+			<label for="inputUrl" class="sr-only">URL</label>
+			<input type="text" v-model="link.inputUrl" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+	
+			<label for="inputTitulo" class="sr-only">Título</label>
+			<input type="text" v-model="link.Titulo" name="inputTitulo" class="form-control" placeholder="Título" required>
+	
+			<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
+			<input type="text" v-model="link.Tags" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+	
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" v-model="link.Privado" name="privado">
+					<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
+				</label>
+			</div>
+			
+			<button class="btn btn-sm btn-primary btn-block" type="submit">Salvar</button>
 		</div>
 		<div class="row">
 			<div v-if="erroForm" class="alert alert-warning" role="alert">
