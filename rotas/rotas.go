@@ -121,11 +121,6 @@ func Editar(c *gin.Context) {
 
 func construirLink(c *gin.Context) *modelo.Link {
 
-	var privado bool
-	if c.PostForm("inputPrivado") != "" {
-		privado = true
-	}
-
 	id, err := strconv.Atoi(c.PostForm("inputId"))
 	if err != nil {
 		id = -1
@@ -135,7 +130,7 @@ func construirLink(c *gin.Context) *modelo.Link {
 		ID:          id,
 		URL:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
-		Privado:     privado,
+		Privado:     (c.PostForm("inputPrivado") == "true"),
 		DataCriacao: modelo.DataFormatada{time.Now()},
 		Tags:        modelo.NovasTags(c.PostForm("inputTags")),
 	}
