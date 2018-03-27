@@ -41,6 +41,7 @@
 				{(erroForm)}
 			</div>
 		</div>
+		
 		<div class="row">
 			<h3>Links</h3>
 			<div class="row">
@@ -52,7 +53,7 @@
 			<tbody>
 			<tr v-for="link in lista">
 				<td>
-					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({(link.DataCriacao)})</small></h4>
+					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({( new Date(link.DataCriacao).toLocaleString() )})</small></h4>
 					<span v-if="link.Privado" class="glyphicon glyphicon-lock" aria-hidden="true"></span>
 					<a v-for="tag in link.Tags" style="text-decoration:none;" :href="'/tag/' + tag">
 						<span class="label label-default">{(tag)}</span>&nbsp;
