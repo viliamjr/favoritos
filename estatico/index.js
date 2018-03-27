@@ -1,5 +1,5 @@
 
-var listaLinks = new Vue({
+var modelo = new Vue({
     delimiters: ['{(', ')}'],
     el: '#listaLinks',
     data: {
@@ -11,24 +11,28 @@ var listaLinks = new Vue({
     },
     methods: {
         obterMaisLinks: function() {
-            listaLinks.pagina++;
+            modelo.pagina++;
             obterLinks();
         },
         salvarNovoLink: function() {
-            let link = {
-                inputId
-            };
+            var link = new URLSearchParams();
+            link.append('inputUrl', modelo.link.inputUrl);
+            link.append('inputTitulo', modelo.link.inputTitulo);
+            link.append('inputTags', modelo.link.inputTags);
+            link.append('inputPrivado', modelo.link.Privado);
+            
             axios.post('/api/salvar', link)
             .then(function (response) {
-                if(response.data.links == null) {
-                    let msg = 'Ops, não há mais links para exibir!';
-                    listaLinks.erroLista = msg;
+                if(response.data.erro != null) {
+                    modelo.erroForm = response.data.erro;
                     return;
                 }
-                listaLinks.lista.push(...response.data.links);
+                modelo.erroForm = response.data.msg;
+                modelo.lista.unshift(modelo.link);
+                modelo.link = {}; //XXX funciona para zerar?!
             })
             .catch(function (error) {
-                listaLinks.erroLista = error;
+                modelo.erroForm = error;
                 console.error(error);
             });
         }
@@ -36,17 +40,17 @@ var listaLinks = new Vue({
 });
 
 function obterLinks() {
-    axios.get('/api/links/' + listaLinks.pagina)
+    axios.get('/api/links/' + modelo.pagina)
     .then(function (response) {
         if(response.data.links == null) {
             let msg = 'Ops, não há mais links para exibir!';
-            listaLinks.erroLista = msg;
+            modelo.erroLista = msg;
             return;
         }
-        listaLinks.lista.push(...response.data.links);
+        modelo.lista.push(...response.data.links);
     })
     .catch(function (error) {
-        listaLinks.erroLista = error;
+        modelo.erroLista = error;
         console.error(error);
     });
 }

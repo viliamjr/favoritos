@@ -30,6 +30,7 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	api := r.Group("/api", auth)
 	{
 		api.GET("/links/:pag", Links)
+		api.POST("/salvar", Salvar)
 	}
 }
 
@@ -38,7 +39,7 @@ func Links(c *gin.Context) {
 
 	pag, _ := strconv.Atoi(c.Param("pag"))
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"links": modelo.ObterPagina(pag, true),
 	})
 }
@@ -81,10 +82,9 @@ func Salvar(c *gin.Context) {
 	if c.PostForm("inputId") != "" {
 
 		modelo.AtualizarLink(link)
-		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"proxPagina": 1,
-			"links":      modelo.ObterPagina(0, true),
-			"msg":        "Link atualizado!!",
+		c.JSON(http.StatusOK, gin.H{
+			"erro": nil,
+			"msg":   "Link atualizado!!",
 		})
 	} else {
 
@@ -94,8 +94,8 @@ func Salvar(c *gin.Context) {
 			msg = "OPA! Esse link já foi cadastrado O.o"
 			log.Printf("Erro ao inserir novo link: %v\n", erro)
 		}
-		c.HTML(http.StatusOK, "resp-salvar.html", gin.H{
-			"error": erro,
+		c.JSON(http.StatusOK, gin.H{
+			"erro": erro,
 			"msg":   msg,
 		})
 	}
