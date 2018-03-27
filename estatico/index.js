@@ -4,7 +4,8 @@ var listaLinks = new Vue({
     el: '#listaLinks',
     data: {
         lista: [],
-        erro: "Me apague se não quiser ver erro!",
+        erroForm: "Me apague se não quiser ver erro!",
+        erroLista: "O mesmo, me apage para sumir!",
         pagina: 0
     },
     methods: {
@@ -13,12 +14,15 @@ var listaLinks = new Vue({
             axios.get('/api/links/' + listaLinks.pagina)
             .then(function (response) {
                 if(response.data.links == null) {
-                    alert('Ops, não há mais links para exibir!');
+                    let msg = 'Ops, não há mais links para exibir!';
+                    listaLinks.erroLista = msg;
+                    alert(msg);
                     return;
                 }
                 listaLinks.lista.push(...response.data.links);
             })
             .catch(function (error) {
+                listaLinks.erroLista = error;
                 console.error(error);
             });
         }
@@ -30,5 +34,6 @@ axios.get('/api/links/' +  + listaLinks.pagina)
     listaLinks.lista = response.data.links;
 })
 .catch(function (error) {
+    listaLinks.erroLista = error;
     console.error(error);
 });

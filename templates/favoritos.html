@@ -15,7 +15,45 @@
 
 	<div id="listaLinks" class="container">
 		<div class="row">
-			<div v-if="erro" class="alert alert-info" role="alert">{(erro)}</div>
+			<h3>Novo Link</h3>
+			<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
+				<input type="hidden" name="inputId" value="{{.link.ID}}">
+				<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
+				<label for="inputUrl" class="sr-only">URL</label>
+				<input type="text" value="{{.link.URL}}{{.novaUrl}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+		
+				<label for="inputTitulo" class="sr-only">Título</label>
+				<input type="text" value="{{.link.Titulo}}{{.novoTitulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
+		
+				<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
+				<input type="text" value="{{.link.Tags}}" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+		
+				<div class="checkbox">
+					<label>
+						{{if .link.Privado}}
+							<input type="checkbox" checked name="inputPrivado" value="1">
+						{{else}}
+							<input type="checkbox" name="inputPrivado" value="1">
+						{{end}}
+						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
+					</label>
+				</div>
+				
+				<button class="btn btn-sm btn-primary btn-block" type="submit">Salvar</button>
+			</form>
+		</div>
+		<div class="row">
+			<div v-if="erroForm" class="alert alert-warning" role="alert">
+				{(erroForm)}
+			</div>
+		</div>
+		<div class="row">
+			<h3>Links</h3>
+			<div class="row">
+				<div v-if="erroLista" class="alert alert-warning" role="alert">
+					{(erroLista)}
+				</div>
+			</div>
 			<table class="table table-hover">
 			<tbody>
 			<tr v-for="link in lista">
