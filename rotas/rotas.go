@@ -29,14 +29,17 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 
 	api := r.Group("/api", auth)
 	{
-		api.GET("/links", Links)
+		api.GET("/links/:pag", Links)
 	}
 }
 
 // Links define a rota da página inicial
 func Links(c *gin.Context) {
+
+	pag, _ := strconv.Atoi(c.Param("pag"))
+
 	c.JSON(200, gin.H{
-		"links": modelo.ObterPagina(0, true),
+		"links": modelo.ObterPagina(pag, true),
 	})
 }
 
