@@ -26,7 +26,15 @@ var modelo = new Vue({
                 console.error(error);
             });
         },
+
         salvarNovoLink: function() {
+            
+            let erro = this.dadosInvalidos();
+            if(erro != null) {
+                modelo.erroForm = erro;
+                return;
+            }
+
             var link = new URLSearchParams();
             link.append('inputUrl', modelo.link.inputUrl);
             link.append('inputTitulo', modelo.link.inputTitulo);
@@ -47,6 +55,16 @@ var modelo = new Vue({
                 modelo.erroForm = "Opss, algo deu errado! Log registrado no console.";
                 console.error(error);
             });
+        },
+
+        dadosInvalidos: function() {
+			let input = $('[name=inputUrl]');
+			let url = input.val().trim().toLowerCase();
+			input.focus();
+			if( (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("ftp://")) ) {
+                return null;
+            }
+            return "URL inválida!";
         }
     }
 });
