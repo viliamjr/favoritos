@@ -12,7 +12,19 @@ var modelo = new Vue({
     methods: {
         obterMaisLinks: function() {
             modelo.pagina++;
-            obterLinks();
+            axios.get('/api/links/' + modelo.pagina)
+            .then(function (response) {
+                if(response.data.links == null) {
+                    let msg = 'Ops, não há mais links para exibir!';
+                    modelo.erroLista = msg;
+                    return;
+                }
+                modelo.lista.push(...response.data.links);
+            })
+            .catch(function (error) {
+                modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+                console.error(error);
+            });
         },
         salvarNovoLink: function() {
             var link = new URLSearchParams();
@@ -28,11 +40,11 @@ var modelo = new Vue({
                     return;
                 }
                 modelo.erroForm = response.data.msg;
-                modelo.lista.unshift(modelo.link);
-                modelo.link = {}; //XXX funciona para zerar?!
+                modelo.link = {};
+                obterLinks();
             })
             .catch(function (error) {
-                modelo.erroForm = error;
+                modelo.erroForm = "Opss, algo deu errado! Log registrado no console.";
                 console.error(error);
             });
         }
@@ -40,17 +52,12 @@ var modelo = new Vue({
 });
 
 function obterLinks() {
-    axios.get('/api/links/' + modelo.pagina)
+    axios.get('/api/links/0')
     .then(function (response) {
-        if(response.data.links == null) {
-            let msg = 'Ops, não há mais links para exibir!';
-            modelo.erroLista = msg;
-            return;
-        }
-        modelo.lista.push(...response.data.links);
+        modelo.lista = response.data.links;
     })
     .catch(function (error) {
-        modelo.erroLista = error;
+        modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
         console.error(error);
     });
 }
