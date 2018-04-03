@@ -18,7 +18,7 @@ var modelo = new Vue({
                     modelo.erroLista = msg;
                     return;
                 }
-                modelo.lista.push(...response.data.links);
+                modelo.lista.push(...data.links);
             }).fail(function() {
                 modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
             });
