@@ -53,15 +53,31 @@ var modelo = new Vue({
 
         dadosInvalidos: function() {
 			let input = $('[name=inputUrl]');
-			let url = input.val().trim().toLowerCase();
-			input.focus();
-			if( (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("ftp://")) ) {
-                return null;
+			let dados = input.val().trim().toLowerCase();
+			if( ! (dados.startsWith("http://") || dados.startsWith("https://") || dados.startsWith("ftp://")) ) {
+                input.focus();
+                return "URL inválida!";
             }
-            return "URL inválida!";
+            if(campoVazio('inputTitulo')) {
+                return "Título não pode ser vazio!";
+            }
+            if(campoVazio('inputTags')) {
+                return "Deve ser definada ao menos uma Tag!";
+            }
+            return null;
         }
     }
 });
+
+function campoVazio(nome) {
+    input = $('[name='+nome+']');
+    dados = input.val().trim();
+    if(dados == "") {
+        input.focus();
+        return true;
+    }
+    return false;
+}
 
 function obterLinks() {
     $.get("/api/links/0", function( data ) {
