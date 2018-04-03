@@ -65,6 +65,17 @@ var modelo = new Vue({
                 return "Deve ser definada ao menos uma Tag!";
             }
             return null;
+        },
+
+        removerLink: function(id) {
+            if( confirm('Você deseja excluir este link?') ) {
+                $.get('/api/remover/' + id, function( data ) {
+                    modelo.erroLista = data.msg;
+                    obterLinks();
+                }).fail(function() {
+                    modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+                });
+            }
         }
     }
 });

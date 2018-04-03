@@ -19,10 +19,7 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	raiz := r.Group("/", auth)
 	{
 		raiz.GET("/", Raiz)
-		raiz.GET("/pagina/:pag", Pagina)
 		raiz.GET("/formulario", Formulario)
-		raiz.POST("/salvar", Salvar)
-		raiz.GET("/remover/:id", Remover)
 		raiz.GET("/editar/:id", Editar)
 		raiz.GET("/tag/:tag", Pagina)
 	}
@@ -30,6 +27,7 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	api := r.Group("/api", auth)
 	{
 		api.GET("/links/:pag", Links)
+		api.GET("/remover/:id", Remover)
 		api.POST("/salvar", Salvar)
 	}
 }
@@ -105,9 +103,9 @@ func Salvar(c *gin.Context) {
 func Remover(c *gin.Context) {
 
 	modelo.RemoverLink(c.Param("id"))
-	c.HTML(http.StatusOK, "favoritos.html", gin.H{
+	c.JSON(http.StatusOK, gin.H{
+		"erro": nil,
 		"msg":   "Link removido!",
-		"links": modelo.ObterPagina(0, true),
 	})
 }
 
