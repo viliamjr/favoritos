@@ -12,18 +12,15 @@ var modelo = new Vue({
     methods: {
         obterMaisLinks: function() {
             modelo.pagina++;
-            axios.get('/api/links/' + modelo.pagina)
-            .then(function (response) {
-                if(response.data.links == null) {
+            $.get('/api/links/' + + modelo.pagina, function( data ) {
+                if(data.links == null) {
                     let msg = 'Ops, não há mais links para exibir!';
                     modelo.erroLista = msg;
                     return;
                 }
                 modelo.lista.push(...response.data.links);
-            })
-            .catch(function (error) {
+            }).fail(function() {
                 modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
-                console.error(error);
             });
         },
 
@@ -35,25 +32,22 @@ var modelo = new Vue({
                 return;
             }
 
-            var link = new URLSearchParams();
-            link.append('inputUrl', modelo.link.inputUrl);
-            link.append('inputTitulo', modelo.link.inputTitulo);
-            link.append('inputTags', modelo.link.inputTags);
-            link.append('inputPrivado', modelo.link.Privado);
-            
-            axios.post('/api/salvar', link)
-            .then(function (response) {
-                if(response.data.erro != null) {
-                    modelo.erroForm = response.data.erro;
+            var link = {};
+            link.inputUrl = modelo.link.inputUrl;
+            link.inputTitulo = modelo.link.inputTitulo;
+            link.inputTags = modelo.link.inputTags;
+            link.inputPrivado = modelo.link.Privado;
+
+            $.post("/api/salvar", link, function( data ) {
+                if(data.erro != null) {
+                    modelo.erroForm = data.erro;
                     return;
                 }
-                modelo.erroForm = response.data.msg;
+                modelo.erroForm = data.msg;
                 modelo.link = {};
                 obterLinks();
-            })
-            .catch(function (error) {
+            }).fail(function() {
                 modelo.erroForm = "Opss, algo deu errado! Log registrado no console.";
-                console.error(error);
             });
         },
 
@@ -70,13 +64,10 @@ var modelo = new Vue({
 });
 
 function obterLinks() {
-    axios.get('/api/links/0')
-    .then(function (response) {
-        modelo.lista = response.data.links;
-    })
-    .catch(function (error) {
+    $.get("/api/links/0", function( data ) {
+        modelo.lista = data.links;
+    }).fail(function() {
         modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
-        console.error(error);
     });
 }
 
