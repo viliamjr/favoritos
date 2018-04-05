@@ -60,7 +60,7 @@
 					</a>
 				</td>
 				<td>
-					<a class="btn btn-warning btn-sm" :href="'/editar/' + link.id">
+					<a class="btn btn-warning btn-sm" @click="editarLink(link.id)">
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 					<a class="btn btn-danger btn-sm confirmaExclusao" @click="removerLink(link.id)">

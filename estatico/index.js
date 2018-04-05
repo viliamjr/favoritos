@@ -33,10 +33,11 @@ var modelo = new Vue({
             }
 
             var link = {};
+            link.id = modelo.link.inputId;
             link.inputUrl = modelo.link.inputUrl;
             link.inputTitulo = modelo.link.inputTitulo;
             link.inputTags = modelo.link.inputTags;
-            link.inputPrivado = modelo.link.Privado;
+            link.Privado = modelo.link.Privado;
 
             $.post("/api/salvar", link, function( data ) {
                 if(data.erro != null) {
@@ -76,6 +77,31 @@ var modelo = new Vue({
                     modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
                 });
             }
+        },
+
+        editarLink: function(id) {
+            modelo.link = {};
+            let link = this.obterLink(id);
+            if(link == null) {
+                modelo.erroLista = "Opss, algo deu errado! Não foi possível obter link para edição.";
+                return;
+            }
+            modelo.link.inputUrl = link.URL;
+            modelo.link.inputTitulo = link.Titulo;
+            modelo.link.inputTags = link.Tags.toString();
+            modelo.link.Privado = link.Privado;
+            modelo.link.inputDataCriacao = link.DataCriacao;
+            modelo.link.inputId = link.id;
+        },
+
+        obterLink: function(id) {
+            let encontrado = null;
+            modelo.lista.forEach(link => {
+                if(link.id == id) {
+                    encontrado = link;
+                }
+            });
+            return encontrado;
         }
     }
 });

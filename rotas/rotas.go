@@ -77,7 +77,7 @@ func Salvar(c *gin.Context) {
 
 	link := construirLink(c)
 
-	if c.PostForm("inputId") != "" {
+	if c.PostForm("id") != "" {
 
 		modelo.AtualizarLink(link)
 		c.JSON(http.StatusOK, gin.H{
@@ -119,7 +119,7 @@ func Editar(c *gin.Context) {
 
 func construirLink(c *gin.Context) *modelo.Link {
 
-	id, err := strconv.Atoi(c.PostForm("inputId"))
+	id, err := strconv.Atoi(c.PostForm("id"))
 	if err != nil {
 		id = -1
 	}
@@ -128,7 +128,7 @@ func construirLink(c *gin.Context) *modelo.Link {
 		ID:          id,
 		URL:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
-		Privado:     (c.PostForm("inputPrivado") == "true"),
+		Privado:     (c.PostForm("Privado") == "true"),
 		DataCriacao: modelo.DataFormatada{time.Now()},
 		Tags:        modelo.NovasTags(c.PostForm("inputTags")),
 	}
