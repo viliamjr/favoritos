@@ -4,15 +4,15 @@ var modelo = new Vue({
     el: '#listaLinks',
     data: {
         lista: [],
-        erroForm: null,
-        erroLista: null,
         pagina: 0,
-        link: {}
+        erroLista: null,
+        erroForm: null,
+        link: {},
     },
     methods: {
         obterMaisLinks: function() {
             modelo.pagina++;
-            $.get('/api/links/' + + modelo.pagina, function( data ) {
+            $.get('/api/links/' + modelo.pagina, function( data ) {
                 if(data.links == null) {
                     let msg = 'Ops, não há mais links para exibir!';
                     modelo.erroLista = msg;
