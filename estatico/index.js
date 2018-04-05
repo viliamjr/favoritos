@@ -92,6 +92,7 @@ var modelo = new Vue({
             modelo.link.Privado = link.Privado;
             modelo.link.inputDataCriacao = link.DataCriacao;
             modelo.link.inputId = link.id;
+            window.scrollTo(0, 0);
         },
 
         obterLink: function(id) {
