@@ -6,6 +6,7 @@ var modelo = new Vue({
         lista: [],
         pagina: 0,
         erroLista: null,
+        filtroTag: null,
         erroForm: null,
         link: {},
     },
@@ -103,6 +104,30 @@ var modelo = new Vue({
                 }
             });
             return encontrado;
+        },
+
+        filtarTag: function(tag) {
+            if(modelo.filtroTag != tag) {
+                modelo.pagina = 0;
+                modelo.lista = [];
+                modelo.filtroTag = tag;
+            }
+
+            $.get('/api/links/' + modelo.pagina + '/' + modelo.filtroTag, function( data ) {
+                if(data.links == null) {
+                    let msg = 'Ops, não há links para este filtro!';
+                    modelo.erroLista = msg;
+                    return;
+                }
+                modelo.lista.push(...data.links);
+            }).fail(function() {
+                modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+            });
+        },
+
+        removerFiltroDeTag: function() {
+            modelo.filtroTag = null;
+            obterLinks();
         }
     }
 });

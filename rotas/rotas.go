@@ -27,6 +27,7 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	api := r.Group("/api", auth)
 	{
 		api.GET("/links/:pag", Links)
+		api.GET("/links/:pag/:tag", Links)
 		api.GET("/remover/:id", Remover)
 		api.POST("/salvar", Salvar)
 	}
@@ -36,9 +37,10 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 func Links(c *gin.Context) {
 
 	pag, _ := strconv.Atoi(c.Param("pag"))
+	tag := c.Param("tag")
 
 	c.JSON(http.StatusOK, gin.H{
-		"links": modelo.ObterPagina(pag, true),
+		"links": modelo.ObterPaginaPorTag(pag, true, tag),
 	})
 }
 

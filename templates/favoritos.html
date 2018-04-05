@@ -51,11 +51,19 @@
 			</div>
 			<table class="table table-hover">
 			<tbody>
+			<tr>
+				<h4 v-if="filtroTag" class="text-center">
+					Filtros ativos:
+					<a style="text-decoration:none;" @click="removerFiltroDeTag()" href="#">
+						<span class="label label-default">{(filtroTag)}</span>&nbsp;
+					</a>
+				</h4>
+			</tr>
 			<tr v-for="link in lista">
 				<td>
 					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({( new Date(link.DataCriacao).toLocaleString() )})</small></h4>
 					<span v-if="link.Privado" class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-					<a v-for="tag in link.Tags" style="text-decoration:none;" :href="'/tag/' + tag">
+					<a v-for="tag in link.Tags" style="text-decoration:none;" @click="filtarTag(tag)" href="#">
 						<span class="label label-default">{(tag)}</span>&nbsp;
 					</a>
 				</td>
