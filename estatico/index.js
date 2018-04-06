@@ -113,9 +113,9 @@ var modelo = new Vue({
         filtarTag: function(tag) {
             if(modelo.filtroTag != tag) {
                 modelo.pagina = 0;
-                modelo.lista = [];
                 modelo.filtroTag = tag;
             }
+            modelo.lista = [];
 
             $.get('/api/links/' + modelo.pagina + '/' + modelo.filtroTag, function( data ) {
                 if(data.links == null) {
