@@ -13,7 +13,11 @@ var modelo = new Vue({
     methods: {
         obterMaisLinks: function() {
             modelo.pagina++;
-            $.get('/api/links/' + modelo.pagina, function( data ) {
+            let url = '/api/links/' + modelo.pagina;
+            if(modelo.filtroTag != null) {
+                url += '/' + modelo.filtroTag;
+            }
+            $.get(url, function( data ) {
                 if(data.links == null) {
                     let msg = 'Ops, não há mais links para exibir!';
                     modelo.erroLista = msg;
