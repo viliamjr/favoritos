@@ -49,16 +49,17 @@
 					{(erroLista)}
 				</div>
 			</div>
+			<center>
+				<input type="text" v-model="busca" v-on:keyup.13="filtarTag(busca)" name="busca" placeholder="Buscar tag">
+				<div v-if="filtroTag">
+					<span class="label label-default">{(filtroTag)}</span>
+					<button type="button" class="btn btn-default btn-sm" @click="removerFiltroDeTag()">
+						<span class="glyphicon glyphicon-remove"></span>
+					</button>
+				</div>
+			</center>
 			<table class="table table-hover">
 			<tbody>
-			<tr>
-				<h4 v-if="filtroTag" class="text-center">
-					Filtros ativos:
-					<a style="text-decoration:none;" @click="removerFiltroDeTag()" href="#">
-						<span class="label label-default">{(filtroTag)}</span>&nbsp;
-					</a>
-				</h4>
-			</tr>
 			<tr v-for="link in lista">
 				<td>
 					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({( new Date(link.DataCriacao).toLocaleString() )})</small></h4>

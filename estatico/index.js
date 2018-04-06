@@ -9,6 +9,7 @@ var modelo = new Vue({
         filtroTag: null,
         erroForm: null,
         link: {},
+        busca: null
     },
     methods: {
         obterMaisLinks: function() {
@@ -111,6 +112,7 @@ var modelo = new Vue({
         },
 
         filtarTag: function(tag) {
+            modelo.erroLista = null;
             if(modelo.filtroTag != tag) {
                 modelo.pagina = 0;
                 modelo.filtroTag = tag;
@@ -124,6 +126,7 @@ var modelo = new Vue({
                     return;
                 }
                 modelo.lista.push(...data.links);
+                modelo.busca = null;
             }).fail(function() {
                 modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
             });
@@ -131,6 +134,7 @@ var modelo = new Vue({
 
         removerFiltroDeTag: function() {
             modelo.filtroTag = null;
+            modelo.busca = null;
             obterLinks();
         }
     }
@@ -147,6 +151,7 @@ function campoVazio(nome) {
 }
 
 function obterLinks() {
+    modelo.erroLista = null;
     $.get("/api/links/0", function( data ) {
         modelo.lista = data.links;
     }).fail(function() {
