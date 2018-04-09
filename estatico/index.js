@@ -47,7 +47,7 @@ var modelo = new Vue({
 
             $.post("/api/salvar", link, function( data ) {
                 if(data.erro != null) {
-                    modelo.erroForm = data.erro;
+                    modelo.erroForm = data.msg;
                     return;
                 }
                 modelo.erroForm = data.msg;
