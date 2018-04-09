@@ -13,78 +13,82 @@
 </head>
 <body style="background-color: #eee;">
 
-	<div id="listaLinks" class="container">
-		<div class="row">
-			<h3>Novo Link</h3>
-			<input type="hidden" name="inputId" v-model="link.inputId">
-			<input type="hidden" name="inputDataCriacao" v-model="link.DataCriacao">
-			<label for="inputUrl" class="sr-only">URL</label>
-			<input type="text" v-model="link.inputUrl" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
-	
-			<label for="inputTitulo" class="sr-only">Título</label>
-			<input type="text" v-model="link.inputTitulo" name="inputTitulo" class="form-control" placeholder="Título" required>
-	
-			<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
-			<input type="text" v-model="link.inputTags" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
-	
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" v-model="link.Privado" name="privado">
-					<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
-				</label>
+	<div class="container">
+		<div id="modeloForm">
+			<div class="row">
+				<h3>Novo Link</h3>
+				<input type="hidden" name="inputId" v-model="link.inputId">
+				<input type="hidden" name="inputDataCriacao" v-model="link.DataCriacao">
+				<label for="inputUrl" class="sr-only">URL</label>
+				<input type="text" v-model="link.inputUrl" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+		
+				<label for="inputTitulo" class="sr-only">Título</label>
+				<input type="text" v-model="link.inputTitulo" name="inputTitulo" class="form-control" placeholder="Título" required>
+		
+				<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
+				<input type="text" v-model="link.inputTags" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+		
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" v-model="link.Privado" name="privado">
+						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
+					</label>
+				</div>
+				
+				<button class="btn btn-sm btn-primary btn-block" @click="salvarNovoLink">Salvar</button>
 			</div>
-			
-			<button class="btn btn-sm btn-primary btn-block" @click="salvarNovoLink">Salvar</button>
-		</div>
-		<div class="row">
-			<div v-if="erroForm" class="alert alert-warning" role="alert">
-				{(erroForm)}
+			<div class="row">
+				<div v-if="erro" class="alert alert-warning" role="alert">
+					{(erro)}
+				</div>
 			</div>
 		</div>
 		
-		<div class="row">
-			<h3>Links</h3>
+		<div id="modeloLinks">
 			<div class="row">
-				<div v-if="erroLista" class="alert alert-warning" role="alert">
-					{(erroLista)}
+				<h3>Links</h3>
+				<div class="row">
+					<div v-if="erro" class="alert alert-warning" role="alert">
+						{(erro)}
+					</div>
 				</div>
+				<center>
+					<input type="text" v-model="busca" v-on:keyup.13="filtarTag(busca)" name="busca" placeholder="Buscar tag">
+					<div v-if="filtroTag">
+						<span class="label label-default">{(filtroTag)}</span>
+						<button type="button" class="btn btn-default btn-sm" @click="removerFiltroDeTag()">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+					</div>
+				</center>
+				<table class="table table-hover">
+				<tbody>
+				<tr v-for="link in lista">
+					<td>
+						<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({( new Date(link.DataCriacao).toLocaleString() )})</small></h4>
+						<span v-if="link.Privado" class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+						<a v-for="tag in link.Tags" style="text-decoration:none;" @click="filtarTag(tag)" href="#">
+							<span class="label label-default">{(tag)}</span>&nbsp;
+						</a>
+					</td>
+					<td>
+						<a class="btn btn-warning btn-sm" @click="editarLink(link.id)">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+						<a class="btn btn-danger btn-sm confirmaExclusao" @click="removerLink(link.id)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</a>
+					</td>
+				</tr>
+				</tbody>
+				</table>
 			</div>
-			<center>
-				<input type="text" v-model="busca" v-on:keyup.13="filtarTag(busca)" name="busca" placeholder="Buscar tag">
-				<div v-if="filtroTag">
-					<span class="label label-default">{(filtroTag)}</span>
-					<button type="button" class="btn btn-default btn-sm" @click="removerFiltroDeTag()">
-						<span class="glyphicon glyphicon-remove"></span>
-					</button>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a class="btn btn-default btn-lg" @click="obterMaisLinks">
+						<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Mais...
+					</a>
 				</div>
-			</center>
-			<table class="table table-hover">
-			<tbody>
-			<tr v-for="link in lista">
-				<td>
-					<h4><a :href="link.URL">{(link.Titulo)}</a> <small>({( new Date(link.DataCriacao).toLocaleString() )})</small></h4>
-					<span v-if="link.Privado" class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-					<a v-for="tag in link.Tags" style="text-decoration:none;" @click="filtarTag(tag)" href="#">
-						<span class="label label-default">{(tag)}</span>&nbsp;
-					</a>
-				</td>
-				<td>
-					<a class="btn btn-warning btn-sm" @click="editarLink(link.id)">
-						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-					</a>
-					<a class="btn btn-danger btn-sm confirmaExclusao" @click="removerLink(link.id)">
-						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-					</a>
-				</td>
-			</tr>
-			</tbody>
-			</table>
-		</div>
-		<div class="row">
-			<div class="col-md-2 col-md-offset-5">
-				<a class="btn btn-default btn-lg" @click="obterMaisLinks">
-					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> Mais...
-				</a>
 			</div>
 		</div>
 	</div>

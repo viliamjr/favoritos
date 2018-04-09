@@ -1,60 +1,37 @@
 
-var modelo = new Vue({
+var modeloForm = new Vue({
     delimiters: ['{(', ')}'],
-    el: '#listaLinks',
+    el: '#modeloForm',
     data: {
-        lista: [],
-        pagina: 0,
-        erroLista: null,
-        filtroTag: null,
-        erroForm: null,
         link: {},
-        busca: null
+        erro: null
     },
     methods: {
-        obterMaisLinks: function() {
-            modelo.pagina++;
-            let url = '/api/links/' + modelo.pagina;
-            if(modelo.filtroTag != null) {
-                url += '/' + modelo.filtroTag;
-            }
-            $.get(url, function( data ) {
-                if(data.links == null) {
-                    let msg = 'Ops, não há mais links para exibir!';
-                    modelo.erroLista = msg;
-                    return;
-                }
-                modelo.lista.push(...data.links);
-            }).fail(function() {
-                modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
-            });
-        },
-
         salvarNovoLink: function() {
             
             let erro = this.dadosInvalidos();
             if(erro != null) {
-                modelo.erroForm = erro;
+                modeloForm.erro = erro;
                 return;
             }
 
             var link = {};
-            link.id = modelo.link.inputId;
-            link.inputUrl = modelo.link.inputUrl;
-            link.inputTitulo = modelo.link.inputTitulo;
-            link.inputTags = modelo.link.inputTags;
-            link.Privado = modelo.link.Privado;
+            link.id = modeloForm.link.inputId;
+            link.inputUrl = modeloForm.link.inputUrl;
+            link.inputTitulo = modeloForm.link.inputTitulo;
+            link.inputTags = modeloForm.link.inputTags;
+            link.Privado = modeloForm.link.Privado;
 
             $.post("/api/salvar", link, function( data ) {
                 if(data.erro != null) {
-                    modelo.erroForm = data.msg;
+                    modeloForm.erro = data.msg;
                     return;
                 }
-                modelo.erroForm = data.msg;
-                modelo.link = {};
+                modeloForm.erro = data.msg;
+                modeloForm.link = {};
                 obterLinks();
             }).fail(function() {
-                modelo.erroForm = "Opss, algo deu errado! Log registrado no console.";
+                modeloForm.erro = "Opss, algo deu errado! Log registrado no console.";
             });
         },
 
@@ -65,45 +42,86 @@ var modelo = new Vue({
                 input.focus();
                 return "URL inválida!";
             }
-            if(campoVazio('inputTitulo')) {
+            if(this.campoVazio('inputTitulo')) {
                 return "Título não pode ser vazio!";
             }
-            if(campoVazio('inputTags')) {
+            if(this.campoVazio('inputTags')) {
                 return "Deve ser definada ao menos uma Tag!";
             }
             return null;
         },
 
+        campoVazio: function(nome) {
+            input = $('[name='+nome+']');
+            dados = input.val().trim();
+            if(dados == "") {
+                input.focus();
+                return true;
+            }
+            return false;
+        }
+    }
+});
+
+var modeloLinks = new Vue({
+    delimiters: ['{(', ')}'],
+    el: '#modeloLinks',
+    data: {
+        lista: [],
+        pagina: 0,
+        erro: null,
+        filtroTag: null,
+        busca: null
+    },
+    methods: {
+        obterMaisLinks: function() {
+            modeloLinks.pagina++;
+            let url = '/api/links/' + modeloLinks.pagina;
+            if(modeloLinks.filtroTag != null) {
+                url += '/' + modeloLinks.filtroTag;
+            }
+            $.get(url, function( data ) {
+                if(data.links == null) {
+                    let msg = 'Ops, não há mais links para exibir!';
+                    modeloLinks.erro = msg;
+                    return;
+                }
+                modeloLinks.lista.push(...data.links);
+            }).fail(function() {
+                modeloLinks.erro = "Opss, algo deu errado! Log registrado no console.";
+            });
+        },
+
         removerLink: function(id) {
             if( confirm('Você deseja excluir este link?') ) {
                 $.get('/api/remover/' + id, function( data ) {
-                    modelo.erroLista = data.msg;
+                    modeloLinks.erro = data.msg;
                     obterLinks();
                 }).fail(function() {
-                    modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+                    modeloLinks.erro = "Opss, algo deu errado! Log registrado no console.";
                 });
             }
         },
 
         editarLink: function(id) {
-            modelo.link = {};
+            modeloForm.link = {};
             let link = this.obterLink(id);
             if(link == null) {
-                modelo.erroLista = "Opss, algo deu errado! Não foi possível obter link para edição.";
+                modeloLinks.erro = "Opss, algo deu errado! Não foi possível obter link para edição.";
                 return;
             }
-            modelo.link.inputUrl = link.URL;
-            modelo.link.inputTitulo = link.Titulo;
-            modelo.link.inputTags = link.Tags.toString();
-            modelo.link.Privado = link.Privado;
-            modelo.link.inputDataCriacao = link.DataCriacao;
-            modelo.link.inputId = link.id;
+            modeloForm.link.inputUrl = link.URL;
+            modeloForm.link.inputTitulo = link.Titulo;
+            modeloForm.link.inputTags = link.Tags.toString();
+            modeloForm.link.Privado = link.Privado;
+            modeloForm.link.inputDataCriacao = link.DataCriacao;
+            modeloForm.link.inputId = link.id;
             window.scrollTo(0, 0);
         },
 
         obterLink: function(id) {
             let encontrado = null;
-            modelo.lista.forEach(link => {
+            modeloLinks.lista.forEach(link => {
                 if(link.id == id) {
                     encontrado = link;
                 }
@@ -112,50 +130,40 @@ var modelo = new Vue({
         },
 
         filtarTag: function(tag) {
-            modelo.erroLista = null;
-            if(modelo.filtroTag != tag) {
-                modelo.pagina = 0;
-                modelo.filtroTag = tag;
+            modeloLinks.erro = null;
+            if(modeloLinks.filtroTag != tag) {
+                modeloLinks.pagina = 0;
+                modeloLinks.filtroTag = tag;
             }
-            modelo.lista = [];
+            modeloLinks.lista = [];
 
-            $.get('/api/links/' + modelo.pagina + '/' + modelo.filtroTag, function( data ) {
+            $.get('/api/links/' + modeloLinks.pagina + '/' + modeloLinks.filtroTag, function( data ) {
                 if(data.links == null) {
                     let msg = 'Ops, não há links para este filtro!';
-                    modelo.erroLista = msg;
+                    modeloLinks.erro = msg;
                     return;
                 }
-                modelo.lista.push(...data.links);
-                modelo.busca = null;
+                modeloLinks.lista.push(...data.links);
+                modeloLinks.busca = null;
             }).fail(function() {
-                modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+                modeloLinks.erro = "Opss, algo deu errado! Log registrado no console.";
             });
         },
 
         removerFiltroDeTag: function() {
-            modelo.filtroTag = null;
-            modelo.busca = null;
+            modeloLinks.filtroTag = null;
+            modeloLinks.busca = null;
             obterLinks();
         }
     }
 });
 
-function campoVazio(nome) {
-    input = $('[name='+nome+']');
-    dados = input.val().trim();
-    if(dados == "") {
-        input.focus();
-        return true;
-    }
-    return false;
-}
-
 function obterLinks() {
-    modelo.erroLista = null;
+    modeloLinks.erro = null;
     $.get("/api/links/0", function( data ) {
-        modelo.lista = data.links;
+        modeloLinks.lista = data.links;
     }).fail(function() {
-        modelo.erroLista = "Opss, algo deu errado! Log registrado no console.";
+        modeloLinks.erro = "Opss, algo deu errado! Log registrado no console.";
     });
 }
 
