@@ -20,8 +20,6 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 	{
 		raiz.GET("/", Raiz)
 		raiz.GET("/formulario", Formulario)
-		raiz.GET("/editar/:id", Editar)
-		raiz.GET("/tag/:tag", Pagina)
 	}
 
 	api := r.Group("/api", auth)
@@ -31,6 +29,23 @@ func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 		api.GET("/remover/:id", Remover)
 		api.POST("/salvar", Salvar)
 	}
+}
+
+// Raiz define a rota da página inicial
+func Raiz(c *gin.Context) {
+
+	c.HTML(http.StatusOK, "favoritos.html", gin.H{
+		"proxPagina": 1,
+		"links":      modelo.ObterPagina(0, true),
+	})
+}
+
+// Formulario define a rota para exibir o formulário de link
+func Formulario(c *gin.Context) {
+	c.HTML(http.StatusOK, "formulario.html", gin.H{
+		"novaUrl":    c.Query("url"),
+		"novoTitulo": c.Query("titulo"),
+	})
 }
 
 // Links define a rota da página inicial
@@ -44,36 +59,6 @@ func Links(c *gin.Context) {
 	})
 }
 
-// Raiz define a rota da página inicial
-func Raiz(c *gin.Context) {
-
-	c.HTML(http.StatusOK, "favoritos.html", gin.H{
-		"proxPagina": 1,
-		"links":      modelo.ObterPagina(0, true),
-	})
-}
-
-// Pagina define a rota para a paginação dos links
-func Pagina(c *gin.Context) {
-
-	tag := c.Param("tag")
-	log.Println("TAAaaaaaaaag: " + tag)
-
-	pag, _ := strconv.Atoi(c.Param("pag"))
-	c.HTML(http.StatusOK, "favoritos.html", gin.H{
-		"proxPagina": pag + 1,
-		"links":      modelo.ObterPaginaPorTag(pag, true, tag),
-	})
-}
-
-// Formulario define a rota para exibir o formulário de link
-func Formulario(c *gin.Context) {
-	c.HTML(http.StatusOK, "formulario.html", gin.H{
-		"novaUrl":    c.Query("url"),
-		"novoTitulo": c.Query("titulo"),
-	})
-}
-
 // Salvar define a rota para salvar o link
 func Salvar(c *gin.Context) {
 
@@ -84,7 +69,7 @@ func Salvar(c *gin.Context) {
 		modelo.AtualizarLink(link)
 		c.JSON(http.StatusOK, gin.H{
 			"erro": nil,
-			"msg":   "Link atualizado!!",
+			"msg":  "Link atualizado!!",
 		})
 	} else {
 
@@ -96,7 +81,7 @@ func Salvar(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"erro": erro,
-			"msg":   msg,
+			"msg":  msg,
 		})
 	}
 }
@@ -107,15 +92,7 @@ func Remover(c *gin.Context) {
 	modelo.RemoverLink(c.Param("id"))
 	c.JSON(http.StatusOK, gin.H{
 		"erro": nil,
-		"msg":   "Link removido!",
-	})
-}
-
-// Editar define a rota para exibir os dados de um link no formulário
-func Editar(c *gin.Context) {
-
-	c.HTML(http.StatusOK, "formulario.html", gin.H{
-		"link": modelo.ObterLink(c.Param("id")),
+		"msg":  "Link removido!",
 	})
 }
 
