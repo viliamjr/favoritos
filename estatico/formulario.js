@@ -59,6 +59,35 @@ var modeloForm = new Vue({
                 return true;
             }
             return false;
-        }
+        },
+
+        salvarNovoLinkFormAvulso: function() {
+            
+            let erro = this.dadosInvalidos();
+            if(erro != null) {
+                modeloForm.erro = erro;
+                return;
+            }
+
+            var link = {};
+            link.id = null;
+            link.inputUrl = $('[name=inputUrl]').val().trim();
+            link.inputTitulo = $('[name=inputTitulo]').val().trim();
+            link.inputTags = $('[name=inputTags]').val().trim();
+            link.Privado = $('[name=privado]:checked').val() == "on";
+
+            console.log(link);
+            console.debug();
+
+            $.post("/api/salvar", link, function( data ) {
+                if(data.erro != null) {
+                    modeloForm.erro = data.msg;
+                    return;
+                }
+                window.parent.postMessage("message","*");
+            }).fail(function() {
+                modeloForm.erro = "Opss, algo deu errado! Log registrado no console.";
+            });
+        },
     }
 });

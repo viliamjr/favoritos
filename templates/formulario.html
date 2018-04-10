@@ -25,39 +25,41 @@
 	</div>
 	<div class="row">
 	<div class="col-xs-12">
-	<form method="POST" onSubmit="return validarFormulario();" action="/salvar">
-		<input type="hidden" name="inputId" value="{{.link.ID}}">
-		<input type="hidden" name="inputDataCriacao" value="{{.link.DataCriacao.Time.Unix}}">
-		<label for="inputUrl" class="sr-only">URL</label>
-		<input type="text" value="{{.link.URL}}{{.novaUrl}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
-
-		<label for="inputTitulo" class="sr-only">Título</label>
-		<input type="text" value="{{.link.Titulo}}{{.novoTitulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
-
-		<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
-		<input type="text" value="{{.link.Tags}}" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
-
-		<div class="checkbox">
-			<label>
-				{{if .link.Privado}}
-					<input type="checkbox" checked name="inputPrivado" value="1">
-				{{else}}
-					<input type="checkbox" name="inputPrivado" value="1">
-				{{end}}
-				<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
-			</label>
+		<div id="modeloForm">
+			<div class="row">
+				<label for="inputUrl" class="sr-only">URL</label>
+				<input type="text" value="{{.novaUrl}}" name="inputUrl" class="form-control" placeholder="URL" required autofocus>
+		
+				<label for="inputTitulo" class="sr-only">Título</label>
+				<input type="text" value="{{.novoTitulo}}" name="inputTitulo" class="form-control" placeholder="Título" required>
+		
+				<label for="inputTags" class="sr-only">Tags (separadas por vírgula)</label>
+				<input type="text" name="inputTags" class="form-control" placeholder="Tags (separadas por vírgula)" required>
+		
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="privado">
+						<span class="glyphicon glyphicon-lock" aria-hidden="true"></span> privado!
+					</label>
+				</div>
+				
+				<button class="btn btn-sm btn-primary btn-block" @click="salvarNovoLinkFormAvulso">Salvar</button>
+			</div>
+			<div class="row">
+				<div v-if="erro" class="alert alert-warning" role="alert">
+					{(erro)}
+				</div>
+			</div>
 		</div>
-		<button class="btn btn-lg btn-primary btn-block" type="submit">Salvar</button>
-	</form>
 	</div>
 	</div>
 
 	</div> <!-- /container -->
 
-	<!-- JQuery: dependência do bootstrap -->
 	<script src="/estatico/jquery-1.12.0.min.js"></script>
-	<!-- JS do bootstrap -->
 	<script src="/estatico/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+	<script src="/estatico/vue-debug.js"></script>
+	<script src="/estatico/formulario.js"></script>
 
 	<script type="text/javascript">
 
@@ -65,12 +67,6 @@
 			window.parent.postMessage("message","*");
 		});
 
-		function validarFormulario() {
-			var input = $('[name=inputUrl]');
-			var url = input.val().trim().toLowerCase();
-			input.focus();
-			return (url.startsWith("http://") || url.startsWith("https://"));
-		}
 	</script>
 
 </body>
