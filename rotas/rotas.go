@@ -14,21 +14,21 @@ import (
 func RegistrarRotas(r *gin.Engine, usuario, senha string) {
 
 	// Habilitando esquema de autorização simples
-	auth := r.Group("/", gin.BasicAuth(gin.Accounts{usuario: senha}))
+	auth := gin.BasicAuth(gin.Accounts{usuario: senha})
 
-	auth.GET("/", Raiz)
+	raiz := r.Group("/", auth)
+	{
+		raiz.GET("/", Raiz)
+		raiz.GET("/formulario", Formulario)
+	}
 
-	auth.GET("/pagina/:pag", Pagina)
-
-	auth.GET("/formulario", Formulario)
-
-	auth.POST("/salvar", Salvar)
-
-	auth.GET("/remover/:id", Remover)
-
-	auth.GET("/editar/:id", Editar)
-
-	auth.GET("/tag/:tag", Pagina)
+	api := r.Group("/api", auth)
+	{
+		api.GET("/links/:pag", Links)
+		api.GET("/links/:pag/:tag", Links)
+		api.GET("/remover/:id", Remover)
+		api.POST("/salvar", Salvar)
+	}
 }
 
 // Raiz define a rota da página inicial
@@ -40,19 +40,6 @@ func Raiz(c *gin.Context) {
 	})
 }
 
-// Pagina define a rota para a paginação dos links
-func Pagina(c *gin.Context) {
-
-	tag := c.Param("tag")
-	log.Println("TAAaaaaaaaag: " + tag)
-
-	pag, _ := strconv.Atoi(c.Param("pag"))
-	c.HTML(http.StatusOK, "favoritos.html", gin.H{
-		"proxPagina": pag + 1,
-		"links":      modelo.ObterPaginaPorTag(pag, true, tag),
-	})
-}
-
 // Formulario define a rota para exibir o formulário de link
 func Formulario(c *gin.Context) {
 	c.HTML(http.StatusOK, "formulario.html", gin.H{
@@ -61,18 +48,28 @@ func Formulario(c *gin.Context) {
 	})
 }
 
+// Links define a rota da página inicial
+func Links(c *gin.Context) {
+
+	pag, _ := strconv.Atoi(c.Param("pag"))
+	tag := c.Param("tag")
+
+	c.JSON(http.StatusOK, gin.H{
+		"links": modelo.ObterPaginaPorTag(pag, true, tag),
+	})
+}
+
 // Salvar define a rota para salvar o link
 func Salvar(c *gin.Context) {
 
 	link := construirLink(c)
 
-	if c.PostForm("inputId") != "" {
+	if c.PostForm("id") != "" {
 
 		modelo.AtualizarLink(link)
-		c.HTML(http.StatusOK, "favoritos.html", gin.H{
-			"proxPagina": 1,
-			"links":      modelo.ObterPagina(0, true),
-			"msg":        "Link atualizado!!",
+		c.JSON(http.StatusOK, gin.H{
+			"erro": nil,
+			"msg":  "Link atualizado!!",
 		})
 	} else {
 
@@ -82,9 +79,9 @@ func Salvar(c *gin.Context) {
 			msg = "OPA! Esse link já foi cadastrado O.o"
 			log.Printf("Erro ao inserir novo link: %v\n", erro)
 		}
-		c.HTML(http.StatusOK, "resp-salvar.html", gin.H{
-			"error": erro,
-			"msg":   msg,
+		c.JSON(http.StatusOK, gin.H{
+			"erro": erro,
+			"msg":  msg,
 		})
 	}
 }
@@ -93,28 +90,15 @@ func Salvar(c *gin.Context) {
 func Remover(c *gin.Context) {
 
 	modelo.RemoverLink(c.Param("id"))
-	c.HTML(http.StatusOK, "favoritos.html", gin.H{
-		"msg":   "Link removido!",
-		"links": modelo.ObterPagina(0, true),
-	})
-}
-
-// Editar define a rota para exibir os dados de um link no formulário
-func Editar(c *gin.Context) {
-
-	c.HTML(http.StatusOK, "formulario.html", gin.H{
-		"link": modelo.ObterLink(c.Param("id")),
+	c.JSON(http.StatusOK, gin.H{
+		"erro": nil,
+		"msg":  "Link removido!",
 	})
 }
 
 func construirLink(c *gin.Context) *modelo.Link {
 
-	var privado bool
-	if c.PostForm("inputPrivado") != "" {
-		privado = true
-	}
-
-	id, err := strconv.Atoi(c.PostForm("inputId"))
+	id, err := strconv.Atoi(c.PostForm("id"))
 	if err != nil {
 		id = -1
 	}
@@ -123,7 +107,7 @@ func construirLink(c *gin.Context) *modelo.Link {
 		ID:          id,
 		URL:         c.PostForm("inputUrl"),
 		Titulo:      c.PostForm("inputTitulo"),
-		Privado:     privado,
+		Privado:     (c.PostForm("Privado") == "true"),
 		DataCriacao: modelo.DataFormatada{time.Now()},
 		Tags:        modelo.NovasTags(c.PostForm("inputTags")),
 	}

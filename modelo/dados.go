@@ -43,7 +43,7 @@ func (d DataFormatada) String() string {
 
 // Link representa o link a ser salvo.
 type Link struct {
-	ID          int
+	ID          int `json:"id"`
 	URL         string
 	Titulo      string
 	Privado     bool
