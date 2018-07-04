@@ -159,10 +159,12 @@ func ObterPaginaPorTag(pag int, listarPrivados bool, tag string) []*Link {
 	var encontrados []*Link
 	offset := 20
 
-	cmdSQL := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 and tags like '%" + tag + "%'"
+	cmdSQL := "select rowid,url,titulo,tags,data_criacao,privado from link where privado = 0 and "
 	if listarPrivados {
-		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link where tags like '%" + tag + "%'"
+		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link where "
 	}
+
+	cmdSQL += prepararTags(tag)
 
 	cmdSQL += " order by data_criacao desc limit ?,?;"
 
@@ -211,4 +213,21 @@ func ProcurarLinkPorTag(tag string) []*Link {
 	//TODO popula slice com itens encontrados
 
 	return encontrados
+}
+
+// prepararTags retorna trecho SQL para filtar tags
+func prepararTags(tags string) string {
+
+	lista := strings.Split(tags, ",")
+	tam := len(lista)
+
+	var sql string
+	for i := 0; i < tam; i++ {
+		sql += "tags like '%" + strings.TrimSpace(lista[i]) + "%'"
+		if i < (tam - 1) {
+			sql += " or "
+		}
+	}
+
+	return sql
 }
