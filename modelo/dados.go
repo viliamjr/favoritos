@@ -225,7 +225,7 @@ func prepararTags(tags string) string {
 	for i := 0; i < tam; i++ {
 		sql += "tags like '%" + strings.TrimSpace(lista[i]) + "%'"
 		if i < (tam - 1) {
-			sql += " or "
+			sql += " and "
 		}
 	}
 
