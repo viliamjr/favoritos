@@ -12,7 +12,7 @@ var modeloLinks = new Vue({
     methods: {
         obterMaisLinks: function() {
             modeloLinks.pagina++;
-            let url = '/api/links/' + modeloLinks.pagina;
+            let url = 'api/links/' + modeloLinks.pagina;
             if(modeloLinks.filtroTag != null) {
                 url += '/' + modeloLinks.filtroTag;
             }
@@ -30,7 +30,7 @@ var modeloLinks = new Vue({
 
         removerLink: function(id) {
             if( confirm('Você deseja excluir este link?') ) {
-                $.get('/api/remover/' + id, function( data ) {
+                $.get('api/remover/' + id, function( data ) {
                     modeloLinks.erro = data.msg;
                     obterLinks();
                 }).fail(function() {
@@ -73,7 +73,7 @@ var modeloLinks = new Vue({
             }
             modeloLinks.lista = [];
 
-            $.get('/api/links/' + modeloLinks.pagina + '/' + modeloLinks.filtroTag, function( data ) {
+            $.get('api/links/' + modeloLinks.pagina + '/' + modeloLinks.filtroTag, function( data ) {
                 if(data.links == null) {
                     let msg = 'Ops, não há links para este filtro!';
                     modeloLinks.erro = msg;
@@ -96,7 +96,7 @@ var modeloLinks = new Vue({
 
 function obterLinks() {
     modeloLinks.erro = null;
-    $.get("/api/links/0", function( data ) {
+    $.get("api/links/0", function( data ) {
         modeloLinks.lista = data.links;
     }).fail(function() {
         modeloLinks.erro = "Opss, algo deu errado! Log registrado no console.";

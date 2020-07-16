@@ -22,7 +22,7 @@ var modeloForm = new Vue({
             link.inputTags = modeloForm.link.inputTags;
             link.Privado = modeloForm.link.Privado;
 
-            $.post("/api/salvar", link, function( data ) {
+            $.post("api/salvar", link, function( data ) {
                 if(data.erro != null) {
                     modeloForm.erro = data.msg;
                     return;
@@ -79,7 +79,7 @@ var modeloForm = new Vue({
             console.log(link);
             console.debug();
 
-            $.post("/api/salvar", link, function( data ) {
+            $.post("api/salvar", link, function( data ) {
                 if(data.erro != null) {
                     modeloForm.erro = data.msg;
                     return;
