@@ -5,11 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"favoritos/modelo"
-	"favoritos/rotas"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/viliamjr/favoritos/modelo"
+	"github.com/viliamjr/favoritos/rotas"
 )
 
 var (

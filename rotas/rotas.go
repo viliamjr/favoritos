@@ -1,13 +1,13 @@
 package rotas
 
 import (
-	"favoritos/modelo"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/viliamjr/favoritos/modelo"
 )
 
 // RegistrarRotas realiza o registro de todas as rotas da aplicação.
