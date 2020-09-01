@@ -53,7 +53,7 @@
 					</div>
 				</div>
 				<center>
-					<input type="text" v-model="busca" v-on:keyup.13="filtarTag(busca)" name="busca" placeholder="Buscar tag">
+					<input type="text" v-model="busca" v-on:keyup.13="filtarTag(busca)" name="busca" placeholder="Buscar por tag ou título">
 					<div v-if="filtroTag">
 						<span class="label label-default">{(filtroTag)}</span>
 						<button type="button" class="btn btn-default btn-sm" @click="removerFiltroDeTag()">

@@ -52,10 +52,10 @@ func Formulario(c *gin.Context) {
 func Links(c *gin.Context) {
 
 	pag, _ := strconv.Atoi(c.Param("pag"))
-	tag := c.Param("tag")
+	termos := c.Param("tag")
 
 	c.JSON(http.StatusOK, gin.H{
-		"links": modelo.ObterPaginaPorTag(pag, true, tag),
+		"links": modelo.ObterPaginaPorTermos(pag, true, termos),
 	})
 }
 

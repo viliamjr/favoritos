@@ -150,11 +150,11 @@ func RemoverLink(id string) {
 
 // ObterPagina lista os links conforme algoritmo de paginação.
 func ObterPagina(pag int, listarPrivados bool) []*Link {
-	return ObterPaginaPorTag(pag, listarPrivados, "")
+	return ObterPaginaPorTermos(pag, listarPrivados, "")
 }
 
-// ObterPaginaPorTag lista os links filtrando por tags e conforme algoritmo de paginação.
-func ObterPaginaPorTag(pag int, listarPrivados bool, tag string) []*Link {
+// ObterPaginaPorTermos lista os links filtrando por termo (tags ou títulos) e conforme algoritmo de paginação.
+func ObterPaginaPorTermos(pag int, listarPrivados bool, termos string) []*Link {
 
 	var encontrados []*Link
 	offset := 20
@@ -164,7 +164,7 @@ func ObterPaginaPorTag(pag int, listarPrivados bool, tag string) []*Link {
 		cmdSQL = "select rowid,url,titulo,tags,data_criacao,privado from link where "
 	}
 
-	cmdSQL += prepararTags(tag)
+	cmdSQL += prepararTermos(termos)
 
 	cmdSQL += " order by data_criacao desc limit ?,?;"
 
@@ -215,15 +215,23 @@ func ProcurarLinkPorTag(tag string) []*Link {
 	return encontrados
 }
 
-// prepararTags retorna trecho SQL para filtar tags
-func prepararTags(tags string) string {
+// prepararTermos retorna trecho SQL para filtar tags e titulos.
+func prepararTermos(termos string) string {
 
-	lista := strings.Split(tags, ",")
+	lista := strings.Split(termos, ",")
 	tam := len(lista)
 
 	var sql string
 	for i := 0; i < tam; i++ {
-		sql += "tags like '%" + strings.TrimSpace(lista[i]) + "%'"
+		sql += "("
+
+		// filtro por tags
+		sql += " (tags like '" + strings.TrimSpace(lista[i]) + "%' "
+		sql += " or tags like '%," + strings.TrimSpace(lista[i]) + "%')"
+		// filtro por titulo
+		sql += " or titulo like '%" + strings.TrimSpace(lista[i]) + "%'"
+
+		sql += ")"
 		if i < (tam - 1) {
 			sql += " and "
 		}
