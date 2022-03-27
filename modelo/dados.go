@@ -54,11 +54,11 @@ type Link struct {
 var db *sql.DB
 
 // CarregarBanco carrega a variável de pacote 'db' com o banco de dados.
-func CarregarBanco() *sql.DB {
+func CarregarBanco(caminhoBanco *string) *sql.DB {
 
 	// configurando banco de dados
 	var err error
-	db, err = sql.Open("sqlite3", "./banco.db")
+	db, err = sql.Open("sqlite3", *caminhoBanco)
 	if err != nil {
 		log.Fatal("Erro ao abrir o banco: ", err)
 	}

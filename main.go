@@ -12,19 +12,20 @@ import (
 )
 
 var (
-	endereço = flag.String("e", ":8080", "endereço [IP:PORTA] a ser usado")
-	usuario  = flag.String("u", "admin", "nome do usuário")
-	senha    = flag.String("s", "foobar", "senha do usuário")
-	certSSL  = flag.String("c", "cert.pem", "certificado ssl")
-	keySSL   = flag.String("k", "key.pem", "chave do certificado ssl")
-	naoHTTPS = flag.Bool("nao-https", false, "desabilita o uso de https/ssl")
+	endereço     = flag.String("e", ":8080", "endereço [IP:PORTA] a ser usado")
+	usuario      = flag.String("u", "admin", "nome do usuário")
+	senha        = flag.String("s", "foobar", "senha do usuário")
+	caminhoBanco = flag.String("b", "./banco.db", "caminho do arquivo onde de banco de dados (sqlite)")
+	certSSL      = flag.String("c", "cert.pem", "certificado ssl")
+	keySSL       = flag.String("k", "key.pem", "chave do certificado ssl")
+	naoHTTPS     = flag.Bool("nao-https", false, "desabilita o uso de https/ssl")
 )
 
 func main() {
 
 	flag.Parse()
 
-	db := modelo.CarregarBanco()
+	db := modelo.CarregarBanco(caminhoBanco)
 	defer db.Close()
 
 	// iniciando configuração do servidor web
