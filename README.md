@@ -22,6 +22,6 @@ javascript:(function(e,t){
 
 Utilizando a ferramenta **gin**, execute:
 
-    gin --logPrefix=monitor -i -p 3000 -a 8083 run -- -e :8083 -u admin -s 123 -nao-https
+    gin --logPrefix=monitor -i -p 3000 -a 8083 run -e :8083 -u admin -s 123 -nao-https
 
 O servidor será iniciado sem suporte a HTTPS e com login admin / 123.
