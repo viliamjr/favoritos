@@ -18,6 +18,8 @@ javascript:(function(e,t){
 
 ```
 
+Obs.: o acesso ao formulário a partir da barra de favoritos do browser pode não funcionar dependendo das configurações de segurança do servidor HTTP onde o site alvo está hospedado.
+
 ### Rodando servidor em modo de desenvolvimento
 
 Utilizando a ferramenta **gin**, execute:
