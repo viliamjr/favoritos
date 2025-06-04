@@ -27,3 +27,10 @@ Utilizando a ferramenta **gin**, execute:
     gin --logPrefix=monitor -i -p 3000 -a 8083 run -e :8083 -u admin -s 123 -nao-https
 
 O servidor será iniciado sem suporte a HTTPS e com login admin / 123.
+
+**Obs**: devido à dependência com o `go-sqlite3`, para compilar o projeto é necessário ligar o CGO e ter o gcc instalado. Por exemplo, no Windows é necessário:
+
+```powershell
+$env:Path="$env:Path;E:\mingw64\bin"
+$env:CGO_ENABLED=1
+```
